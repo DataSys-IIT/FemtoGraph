@@ -9,18 +9,27 @@ int main()
 	linkedList.push_back(4);
 }
 
+class GraphNode {
+public:
+  GraphNode(std::list<GraphNode> neighbors, int weight);
+	std::list<GraphNode> neighbors;
+	int weight;
+};
+
+
+GraphNode::GraphNode(std::list<GraphNode> neighbors, int weight) {
+  this->neighbors = neighbors;
+  this->weight = weight; 
+
+}
+
 class Graph {
 public:
 	std::list<GraphNode> vertices;
 	void addVertex(GraphNode node);
 };
 
-Graph::addVertex (GraphNode node) {
+void Graph::addVertex (GraphNode node) {
 	vertices.push_back(node);
 }
 
-class GraphNode {
-public:
-	std::list<GraphNode> neighbors;
-	int weight;
-}
