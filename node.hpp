@@ -11,7 +11,7 @@ public:
   Data getData();
   void setData(Data d);
 private:
-  std::vector<Relationship> relationships;
+  std::vector<Relationship> * relationships;
   Data datavalue;
 
 };
@@ -40,6 +40,7 @@ public:
   ~Data();
   T getData();
   void setData(T dat);
+  const std::vector<T> * getDataRef();
 
 private:
   std::vector<T> datalist;

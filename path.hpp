@@ -8,9 +8,9 @@ class Path {
 public:
   Node startNode();
   Node endNode();
-  std::vector<Relationship> getRelationships();
-  std::vector<Relationship> getRelationshipsReverse(); 
-  Relationship lastRelationship(); //last relation in vector
+  std::vector<Relationship> * getRelationships();
+  std::vector<Relationship> * getRelationshipsReverse(); 
+  Relationship *  lastRelationship(); //last relation in vector
   int getLength();
 private:
   Node start;
