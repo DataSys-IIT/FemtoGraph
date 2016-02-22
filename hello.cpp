@@ -14,9 +14,15 @@ int main()
 
 class GraphNode {
 public:
+	GraphNode(std::list<GraphNode> neighbors, int weight) {
+		this->neighbors = neighbors;
+		this->weight = weight; 
+	}
 	std::list<GraphNode> neighbors;
 	int weight;
 };
+
+
 
 class Graph {
 public:
@@ -34,4 +40,3 @@ void printList (std::list<int> ll) {
 		std::cout << (*it) << ' ';
 	}
 }
-
