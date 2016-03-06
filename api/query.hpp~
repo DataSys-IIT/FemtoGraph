@@ -1,0 +1,23 @@
+#include <vector>
+
+
+class QueryBot {
+
+public:
+  
+  
+private:
+
+
+};
+
+
+class Result {
+
+public:
+  Result();
+  ~Result();
+  
+private:
+
+};
