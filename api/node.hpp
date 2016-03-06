@@ -7,11 +7,11 @@
 class Node {
 
 public:
-  virtual createRelationship(Relationship R);
+  virtual void createRelationship(Relationship R);
   Data getData();
   void setData(Data d);
 private:
-  std::vector<Relationship> * relationships;
+  std::vector<Relationship> relationships;
   Data datavalue;
 
 };
@@ -23,7 +23,7 @@ class Relationship {
 public:
   Node to;
   Node from;
-  Relationship();
+ virtual  Relationship();
   ~Relationship();
   Data getData();
   void setData(Data d);
