@@ -12,6 +12,7 @@ public:
 		this->weight = weight;
 	}
 	std::list<int> neighbors;
+	std::list<int> inEdges;
 	double weight;
 };
 
@@ -29,8 +30,12 @@ void readGraph (Graph& g, std::string filename);
 void readGraphEdges (Graph g, std::string filename);
 void printVec (std::vector<GraphNode> ll);
 
-int main()
+int main(int argc, char *argv[])
 {
+	if (argc != 2) {
+		std::cout << "Usage: " << argv[0] << " <edge list filename>" << std::endl;
+		return 1;
+	}
 	std::cout << "I am graph processing system!\n";
 	std::list<int> linkedList;
 	linkedList.push_back(3);
@@ -45,7 +50,7 @@ int main()
 	// g.addEdge(2, 1);
 	// g.print();
 	Graph g2;
-	readGraph(g2, "0.edges");
+	readGraph(g2, argv[1]);
 	g2.print();
 	std::cout << "Number of nodes: " << g2.size() << std::endl;
 	std::cout << "Number of edges: " << g2.edgeCount() << std::endl;
@@ -60,6 +65,7 @@ void Graph::addVertex (int weight) {
 
 void Graph::addEdge (int from, int to) {
 	vertices[from]->neighbors.push_back(to);
+	vertices[to]->inEdges.push_back(from);
 }
 
 void Graph::print () {
@@ -85,6 +91,13 @@ int Graph::edgeCount () {
 	}
 	return total;
 }
+
+/**
+ * NOT THREAD SAFE
+ */
+// void Graph::pagerank (int alpha) {
+// 	int n = size();
+// }
 
 void printList (std::list<int> ll) {
 	std::list<int>::const_iterator it;
