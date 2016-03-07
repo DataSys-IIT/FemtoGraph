@@ -10,7 +10,7 @@ class QueryBot {
 public:
   Result execute(std::string query, std::map<std::string,std::string> params); 
   void registerTransactionHandledr(TransactionHandler t); //sets the handler
-private:
+protected:
   TransactionHandler handler;
 
 
@@ -20,7 +20,7 @@ class Transaction {
 
 public:
   Lock aquireReadLock();
-private: 
+protected: 
 
 };
 
@@ -34,7 +34,7 @@ public:
   bool hasProp(std::string key);
   void * removeProp(std::string key);
   void setProp(std::string key, void & value); //again not sure of cpp here. 
-private:
+protected:
 
 };
 
@@ -44,7 +44,7 @@ public:
   virtual void afterCommit(); //success
   virtual void beforeCommit();
   virtual void afterRollback(); //failure
-private:
+protected:
 
 
 };
@@ -58,7 +58,7 @@ public:
 
   std::vector<Node> getNodes();
   std::vector<Relationship> getRelationships();
-private:
+protected:
   std::vector<Node> nodes;
   std::vector<Relationship> rels;
 
