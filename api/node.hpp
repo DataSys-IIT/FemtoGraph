@@ -10,7 +10,7 @@ public:
   virtual void createRelationship(Relationship R);
   Data getData();
   void setData(Data d);
-private:
+protected:
   std::vector<Relationship> relationships;
   Data datavalue;
 
@@ -28,7 +28,7 @@ public:
   Data getData();
   void setData(Data d);
 
-private: 
+protected: 
   Data datavalue;
 };
 
@@ -42,7 +42,7 @@ public:
   void setData(T dat);
   const std::vector<T> * getDataRef();
 
-private:
+protected:
   std::vector<T> datalist;
   
 };

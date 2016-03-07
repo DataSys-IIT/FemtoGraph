@@ -12,7 +12,7 @@ public:
   std::vector<Relationship> * getRelationshipsReverse(); 
   Relationship *  lastRelationship(); //last relation in vector
   int getLength();
-private:
+protected:
   Node start;
   Node end;
   int length;
