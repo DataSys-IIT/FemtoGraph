@@ -21,6 +21,7 @@ public:
   void setData(PageRankVertexData d);
 private:
   std::vector<Edge> relationships;
+  std::vector<Edge> relationshipsTo; //needed to make pagerank faster
   PageRankVertexData dataValue;  
 };
 
