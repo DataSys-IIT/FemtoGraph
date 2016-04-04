@@ -3,6 +3,7 @@
 #include <list>
 #include <vector>
 #include <limits>
+#include <time.h>
 
 // WRITE GARBAGE COLLECTOR
 
@@ -45,13 +46,20 @@ int main(int argc, char *argv[])
 	readGraph(g2, argv[1]);
 	g2.print();
 	g2.printRank();
+	time_t start, end;
+	double elapsed;
+	time(&start);
 	for (int i = 0; i < 10; i++) {
 		g2.pagerank(0.5, 1.0);
-		g2.printRank();
+		//g2.printRank();
 		std::cout << std::endl;
 	}
+	time(&end);
+	elapsed = difftime(end, start);
+	g2.printRank();
 	std::cout << "Number of nodes: " << g2.size() << std::endl;
 	std::cout << "Number of edges: " << g2.edgeCount() << std::endl;
+	std::cout << elapsed << std::endl;
 }
 
 

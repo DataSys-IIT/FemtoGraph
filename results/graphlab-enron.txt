@@ -1,0 +1,46 @@
+data/email-Enron.txt
+This non-commercial license of GraphLab Create is assigned to bwalter4@hawk.iit.edu and will expire on March 21, 2017. For commercial licensing options, visit https://dato.com/buy/.
+Finished parsing file /home/azureuser/GraphZScratch/data/email-Enron.txt
+Parsing completed. Parsed 367662 lines in 0.636991 secs.
+Counting out degree
+Done counting out degree
++-----------+-----------------------+
+| Iteration | L1 change in pagerank |
++-----------+-----------------------+
+| 1         | 21054.4               |
+| 2         | 6435.52               |
+| 3         | 1904.72               |
+| 4         | 698.449               |
+| 5         | 256.917               |
+| 6         | 105.773               |
+| 7         | 43.8225               |
+| 8         | 19.248                |
+| 9         | 8.46914               |
+| 10        | 3.84328               |
+| 11        | 1.74319               |
+| 12        | 0.804592              |
+| 13        | 0.371023              |
+| 14        | 0.172909              |
+| 15        | 0.0805346             |
+| 16        | 0.0377668             |
+| 17        | 0.0177089             |
+| 18        | 0.00834199            |
++-----------+-----------------------+
++------+----------------+-------------------+
+| __id |    pagerank    |       delta       |
++------+----------------+-------------------+
+|  5   | 3.54753026035  | 1.38573737107e-06 |
+|  7   | 1.12295942446  | 1.82093427448e-07 |
+|  8   | 0.586429785111 | 1.37444711279e-07 |
+|  10  | 0.804469429919 |  7.354674747e-08  |
+|  27  | 3.74693749706  | 8.74668634854e-07 |
+|  29  | 0.586429785111 | 1.37444711279e-07 |
+|  33  | 0.586429785111 | 1.37444711279e-07 |
+|  47  | 0.586429785111 | 1.37444711279e-07 |
+|  50  | 0.950362335219 | 1.31499545253e-07 |
+|  52  | 0.754532714737 | 6.23814074396e-07 |
++------+----------------+-------------------+
+[36692 rows x 3 columns]
+Note: Only the head of the SFrame is printed.
+You can use print_rows(num_rows=m, num_columns=n) to print more rows and columns.
+time: 2.23209309578
