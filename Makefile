@@ -1,7 +1,8 @@
 CPP=g++
+CPPFLAGS=-std=c++11 -g
 
 graph: graph.cpp
-	$(CPP) -g graph.cpp -o bin/graph
+	$(CPP) $(CPPFLAGS) graph.cpp -o bin/graph
 
 test: graph
 	bin/graph

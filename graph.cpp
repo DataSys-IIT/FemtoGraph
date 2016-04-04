@@ -111,7 +111,7 @@ void Graph::pagerank (double alpha, double epsilon) {
 		linkResult = 0;
 		for (inEdgeIter = v->inEdges.begin(); inEdgeIter != v->inEdges.end(); ++inEdgeIter) {
 			// For now, we use 1 for edge weight
-			linkResult += 1 * vertices[*inEdgeIter]->weight;
+			linkResult += (1.0 / vertices[*inEdgeIter]->neighbors.size()) * vertices[*inEdgeIter]->weight;
 		}
 		v->weight = (alpha/n) + (1-alpha) * linkResult;
 	}
