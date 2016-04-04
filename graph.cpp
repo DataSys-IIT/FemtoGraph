@@ -4,6 +4,8 @@
 #include <vector>
 #include <limits>
 
+// WRITE GARBAGE COLLECTOR
+
 void printList(std::list<int> ll);
 
 class GraphNode {
@@ -22,8 +24,10 @@ public:
 	void addVertex(int weight);
 	void addEdge (int from, int to);
 	void print();
+	void printRank();
 	int size();
 	int edgeCount();
+	void pagerank (double alpha, double epsilon);
 };
 
 void readGraph (Graph& g, std::string filename);
@@ -37,21 +41,15 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 	std::cout << "I am graph processing system!\n";
-	std::list<int> linkedList;
-	linkedList.push_back(3);
-	linkedList.push_back(4);
-	//printList(linkedList);
-	// Graph g;
-	// g.addVertex(a);
-	// g.addVertex(b);
-	// g.addVertex(c);
-	// g.addEdge(0, 1);
-	// g.addEdge(0, 2);
-	// g.addEdge(2, 1);
-	// g.print();
 	Graph g2;
 	readGraph(g2, argv[1]);
 	g2.print();
+	g2.printRank();
+	for (int i = 0; i < 10; i++) {
+		g2.pagerank(0.5, 1.0);
+		g2.printRank();
+		std::cout << std::endl;
+	}
 	std::cout << "Number of nodes: " << g2.size() << std::endl;
 	std::cout << "Number of edges: " << g2.edgeCount() << std::endl;
 }
@@ -79,6 +77,13 @@ void Graph::print () {
 	}
 }
 
+void Graph::printRank () {
+	std::list<int>::const_iterator it;
+	for (int i = 0; i < vertices.size(); i++) {
+		std::cout << i << "-> " << vertices[i]->weight << std::endl;
+	}
+}
+
 int Graph::size () {
 	return vertices.size();
 }
@@ -95,9 +100,22 @@ int Graph::edgeCount () {
 /**
  * NOT THREAD SAFE
  */
-// void Graph::pagerank (int alpha) {
-// 	int n = size();
-// }
+void Graph::pagerank (double alpha, double epsilon) {
+	int n = size();
+	double linkResult;
+	std::list<int>::const_iterator inEdgeIter;
+	std::vector<GraphNode*>::const_iterator nodePtrIter;
+	GraphNode *v;
+	for (nodePtrIter = vertices.begin(); nodePtrIter != vertices.end(); ++nodePtrIter) {
+		v = *nodePtrIter;
+		linkResult = 0;
+		for (inEdgeIter = v->inEdges.begin(); inEdgeIter != v->inEdges.end(); ++inEdgeIter) {
+			// For now, we use 1 for edge weight
+			linkResult += 1 * vertices[*inEdgeIter]->weight;
+		}
+		v->weight = (alpha/n) + (1-alpha) * linkResult;
+	}
+}
 
 void printList (std::list<int> ll) {
 	std::list<int>::const_iterator it;
