@@ -73383,15 +73383,35 @@ I am graph processing system!
 36689-> 1
 36690-> 1
 36691-> 1
+Vertices touched: 36692
+Edges touched: 367662
 
+Vertices touched: 36692
+Edges touched: 367662
 
+Vertices touched: 36692
+Edges touched: 367662
 
+Vertices touched: 36692
+Edges touched: 367662
 
+Vertices touched: 36692
+Edges touched: 367662
 
+Vertices touched: 36692
+Edges touched: 367662
 
+Vertices touched: 36692
+Edges touched: 367662
 
+Vertices touched: 36692
+Edges touched: 367662
 
+Vertices touched: 36692
+Edges touched: 367662
 
+Vertices touched: 36692
+Edges touched: 367662
 
 0-> 2.13017e-05
 1-> 0.000534454

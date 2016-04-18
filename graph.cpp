@@ -114,15 +114,20 @@ void Graph::pagerank (double alpha, double epsilon) {
 	std::list<int>::const_iterator inEdgeIter;
 	std::vector<GraphNode*>::const_iterator nodePtrIter;
 	GraphNode *v;
+	int nodeTouchCount = 0, edgeTouchCount = 0;
 	for (nodePtrIter = vertices.begin(); nodePtrIter != vertices.end(); ++nodePtrIter) {
+		nodeTouchCount++;
 		v = *nodePtrIter;
 		linkResult = 0;
 		for (inEdgeIter = v->inEdges.begin(); inEdgeIter != v->inEdges.end(); ++inEdgeIter) {
 			// For now, we use 1 for edge weight
 			linkResult += (1.0 / vertices[*inEdgeIter]->neighbors.size()) * vertices[*inEdgeIter]->weight;
+			edgeTouchCount++;
 		}
 		v->weight = (alpha/n) + (1-alpha) * linkResult;
 	}
+	std::cout << "Vertices touched: " << nodeTouchCount << std::endl;
+	std::cout << "Edges touched: " << edgeTouchCount << std::endl;
 }
 
 void printList (std::list<int> ll) {
