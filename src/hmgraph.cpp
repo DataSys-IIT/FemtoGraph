@@ -45,7 +45,7 @@ void Graph::addEdge (int from, int to) {
 
 //TODO iterate over keys to support non sequential keys
 void Graph::print () {
-	std::list<int>::const_iterator it;
+	std::vector<int>::const_iterator it;
 	for (int i = 0; i < vertices.size(); i++) {
 		std::cout << i << "-> ";
 		for (it = vertices[i]->neighbors.begin(); it != vertices[i]->neighbors.end(); it++) {
@@ -86,8 +86,9 @@ void Graph::pagerank (double alpha, double epsilon, int maxIterations) {
 	int n = size();
 	double linkResult, delta, total_delta = std::numeric_limits<double>::max(), old;
     int iteration = 0;
-	std::list<int>::const_iterator inEdgeIter, end;
+	std::list<int>::const_iterator inEdgeIter;
 	std::vector<GraphNode*>::const_iterator nodePtrIter;
+    int inEdgeId;
 	GraphNode *v;
 	int nodeTouchCount = 0, edgeTouchCount = 0;
     while (iteration < maxIterations && total_delta >= epsilon) {
@@ -96,10 +97,10 @@ void Graph::pagerank (double alpha, double epsilon, int maxIterations) {
             nodeTouchCount++;
             v = vertices[i];
             linkResult = 0;
-            end = v->inEdges.end();
-            for (inEdgeIter = v->inEdges.begin(); inEdgeIter != end; ++inEdgeIter) {
+            for (int i = 0; i < v->inEdges.size(); i++) {
                 // For now, we use 1 for edge weight
-                linkResult += (1.0 / vertices[*inEdgeIter]->neighbors.size()) * vertices[*inEdgeIter]->data->weight;
+                inEdgeId = v->inEdges[i];
+                linkResult += (1.0 / vertices[inEdgeId]->neighbors.size()) * vertices[inEdgeId]->data->weight;
                 edgeTouchCount++;
             }
             old = v->data->weight;

@@ -1,4 +1,4 @@
-#include <list>
+#include <vector>
 #include <unordered_map>
 
 //TODO Add deconstructors - NEED TO CLEANUP
@@ -16,8 +16,8 @@ public:
 	GraphNode(int weight) {
 		data = new GraphNodeData(weight);
 	}
-	std::list<int> neighbors;
-	std::list<int> inEdges;
+	std::vector<int> neighbors;
+	std::vector<int> inEdges;
     GraphNodeData *data;
 };
 
