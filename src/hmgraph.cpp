@@ -86,7 +86,7 @@ void Graph::pagerank (double alpha, double epsilon, int maxIterations) {
 	int n = size();
 	double linkResult, delta, total_delta = std::numeric_limits<double>::max(), old;
     int iteration = 0;
-	std::list<int>::const_iterator inEdgeIter;
+	std::list<int>::const_iterator inEdgeIter, end;
 	std::vector<GraphNode*>::const_iterator nodePtrIter;
 	GraphNode *v;
 	int nodeTouchCount = 0, edgeTouchCount = 0;
@@ -96,7 +96,8 @@ void Graph::pagerank (double alpha, double epsilon, int maxIterations) {
             nodeTouchCount++;
             v = vertices[i];
             linkResult = 0;
-            for (inEdgeIter = v->inEdges.begin(); inEdgeIter != v->inEdges.end(); ++inEdgeIter) {
+            end = v->inEdges.end();
+            for (inEdgeIter = v->inEdges.begin(); inEdgeIter != end; ++inEdgeIter) {
                 // For now, we use 1 for edge weight
                 linkResult += (1.0 / vertices[*inEdgeIter]->neighbors.size()) * vertices[*inEdgeIter]->data->weight;
                 edgeTouchCount++;
