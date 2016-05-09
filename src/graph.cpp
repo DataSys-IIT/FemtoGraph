@@ -43,7 +43,7 @@ void Graph::addEdge (int from, int to) {
 }
 
 void Graph::print () {
-	std::list<int>::const_iterator it;
+	std::vector<int>::const_iterator it;
 	for (int i = 0; i < vertices.size(); i++) {
 		std::cout << i << "-> ";
 		for (it = vertices[i]->neighbors.begin(); it != vertices[i]->neighbors.end(); it++) {
@@ -80,7 +80,7 @@ void Graph::pagerank (double alpha, double epsilon, int maxIterations) {
 	int n = size();
 	double linkResult, delta, total_delta = std::numeric_limits<double>::max(), old;
     int iteration = 0;
-	std::list<int>::const_iterator inEdgeIter;
+	std::vector<int>::const_iterator inEdgeIter;
 	std::vector<GraphNode*>::const_iterator nodePtrIter, end;
 	end = vertices.end();
 	GraphNode *v;
