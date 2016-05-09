@@ -2,38 +2,8 @@
 #include <fstream>
 #include <list>
 #include <vector>
-#include <limits>
-#include <time.h>
-
-// WRITE GARBAGE COLLECTOR
-
-void printList(std::list<int> ll);
-
-class GraphNode {
-public:
-	GraphNode(int weight) {
-		this->weight = weight;
-	}
-	std::list<int> neighbors;
-	std::list<int> inEdges;
-	double weight;
-};
-
-class Graph {
-public:
-	std::vector<GraphNode*> vertices;
-	void addVertex(int weight);
-	void addEdge (int from, int to);
-	void print();
-	void printRank();
-	int size();
-	int edgeCount();
-	void pagerank (double alpha, double epsilon);
-};
-
-void readGraph (Graph& g, std::string filename);
-void readGraphEdges (Graph g, std::string filename);
-void printVec (std::vector<GraphNode> ll);
+#include <cmath>
+#include "graph.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -49,11 +19,8 @@ int main(int argc, char *argv[])
 	time_t start, end;
 	double elapsed;
 	time(&start);
-	for (int i = 0; i < 10; i++) {
-		g2.pagerank(0.5, 1.0);
-		//g2.printRank();
-		std::cout << std::endl;
-	}
+    g2.pagerank(0.5, .000000001, 12);
+//    g2.pagerank(0.5, .01, 12);
 	time(&end);
 	elapsed = difftime(end, start);
 	g2.printRank();
@@ -88,7 +55,7 @@ void Graph::print () {
 void Graph::printRank () {
 	std::list<int>::const_iterator it;
 	for (int i = 0; i < vertices.size(); i++) {
-		std::cout << i << "-> " << vertices[i]->weight << std::endl;
+		std::cout << i << "-> " << vertices[i]->data->weight << std::endl;
 	}
 }
 
@@ -108,24 +75,34 @@ int Graph::edgeCount () {
 /**
  * NOT THREAD SAFE
  */
-void Graph::pagerank (double alpha, double epsilon) {
+void Graph::pagerank (double alpha, double epsilon, int maxIterations) {
 	int n = size();
-	double linkResult;
+	double linkResult, delta, total_delta = std::numeric_limits<double>::max(), old;
+    int iteration = 0;
 	std::list<int>::const_iterator inEdgeIter;
 	std::vector<GraphNode*>::const_iterator nodePtrIter;
 	GraphNode *v;
 	int nodeTouchCount = 0, edgeTouchCount = 0;
-	for (nodePtrIter = vertices.begin(); nodePtrIter != vertices.end(); ++nodePtrIter) {
-		nodeTouchCount++;
-		v = *nodePtrIter;
-		linkResult = 0;
-		for (inEdgeIter = v->inEdges.begin(); inEdgeIter != v->inEdges.end(); ++inEdgeIter) {
-			// For now, we use 1 for edge weight
-			linkResult += (1.0 / vertices[*inEdgeIter]->neighbors.size()) * vertices[*inEdgeIter]->weight;
-			edgeTouchCount++;
-		}
-		v->weight = (alpha/n) + (1-alpha) * linkResult;
-	}
+    while (iteration < maxIterations && total_delta >= epsilon) {
+        total_delta = 0;
+        for (nodePtrIter = vertices.begin(); nodePtrIter != vertices.end(); ++nodePtrIter) {
+            nodeTouchCount++;
+            v = *nodePtrIter;
+            linkResult = 0;
+            for (inEdgeIter = v->inEdges.begin(); inEdgeIter != v->inEdges.end(); ++inEdgeIter) {
+                // For now, we use 1 for edge weight
+                linkResult += (1.0 / vertices[*inEdgeIter]->neighbors.size()) * vertices[*inEdgeIter]->data->weight;
+                edgeTouchCount++;
+            }
+            old = v->data->weight;
+            v->data->weight = n*((alpha / n) + (1 - alpha) * linkResult/n);
+            delta = fabs(v->data->weight - old);
+            total_delta += delta;
+        }
+        std::cout << "Delta: " << total_delta << std::endl;
+        iteration++;
+    }
+    std::cout << "Iterations completed: " << iteration << std::endl;
 	std::cout << "Vertices touched: " << nodeTouchCount << std::endl;
 	std::cout << "Edges touched: " << edgeTouchCount << std::endl;
 }
@@ -140,7 +117,7 @@ void printList (std::list<int> ll) {
 void printVec (std::vector<GraphNode> ll) {
 	std::vector<GraphNode>::const_iterator it;
 	for (it = ll.begin(); it != ll.end(); it++) {
-		std::cout << it->weight << ' ';
+		std::cout << it->data->weight << ' ';
 	}
 }
 
