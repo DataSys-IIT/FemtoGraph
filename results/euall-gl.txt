@@ -1,0 +1,38 @@
+data/email-EuAll.txt
+This non-commercial license of GraphLab Create is assigned to bwalter4@hawk.iit.edu and will expire on March 21, 2017. For commercial licensing options, visit https://dato.com/buy/.
+Finished parsing file /home/azureuser/GraphZScratch/data/email-EuAll.txt
+Parsing completed. Parsed 420045 lines in 0.764942 secs.
+Counting out degree
+Done counting out degree
++-----------+-----------------------+
+| Iteration | L1 change in pagerank |
++-----------+-----------------------+
+| 1         | 226643                |
+| 2         | 78179.6               |
+| 3         | 21943.2               |
+| 4         | 6633.55               |
+| 5         | 2251.12               |
+| 6         | 787.498               |
+| 7         | 281.104               |
+| 8         | 102.738               |
+| 9         | 38.3971               |
+| 10        | 14.6246               |
++-----------+-----------------------+
++------+----------------+-------------------+
+| __id |    pagerank    |       delta       |
++------+----------------+-------------------+
+|  5   | 44.5011074098  |  0.0019415962157  |
+|  7   | 50.3991490762  |  0.00357082327838 |
+|  8   | 7.37057363323  |  0.00193801230731 |
+|  10  | 423.930780765  |  0.0431744579724  |
+|  27  |      0.5       |        0.0        |
+|  29  |      0.5       |        0.0        |
+|  33  | 0.738140691724 | 7.37130563558e-05 |
+|  47  | 17.7131109551  |  0.00191689453678 |
+|  50  | 139.808568158  |   0.049255717839  |
+|  52  | 3.74987895907  | 0.000164659082188 |
++------+----------------+-------------------+
+[265214 rows x 3 columns]
+Note: Only the head of the SFrame is printed.
+You can use print_rows(num_rows=m, num_columns=n) to print more rows and columns.
+time: 2.16502213478
