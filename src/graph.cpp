@@ -19,7 +19,6 @@ int main(int argc, char *argv[])
 	}
 	std::cout << "I am graph processing system!\n";
 	Graph g2;
-	readGraph(g2, argv[1]);
 	epsilon = atof(argv[2]);
 	damping = atof(argv[3]);
 	maxIterations = atoi(argv[4]);
@@ -33,6 +32,7 @@ int main(int argc, char *argv[])
 	std::cout << "epsilon: " << epsilon << std::endl;
 	std::cout << "damping: " << damping << std::endl;
 	std::cout << "max iterations: " << maxIterations << std::endl;
+	readGraph(g2, argv[1]);
 	if (verbose) {
 		g2.print();
 		g2.printRank();
@@ -52,10 +52,24 @@ int main(int argc, char *argv[])
 	std::cout << elapsed << std::endl;
 }
 
+GraphNode::~GraphNode () {
+    if (data != NULL) {
+        delete data;
+    }
+}
 
+Graph::~Graph () {
+    std::vector<GraphNode*>::const_iterator nodePtrIter;
+    for (nodePtrIter = vertices.begin(); nodePtrIter != vertices.end(); ++nodePtrIter) {
+        delete (*nodePtrIter);
+    }
+    vertices.clear();
+
+}
 
 void Graph::addVertex (int weight) {
 	//GraphNode *node = new GraphNode(weight);
+	//vertices.push_back(new GraphNode(weight));
 	vertices.push_back(new GraphNode(weight));
 }
 

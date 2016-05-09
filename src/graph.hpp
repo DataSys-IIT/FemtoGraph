@@ -16,6 +16,7 @@ public:
 	GraphNode(int weight) {
 		data = new GraphNodeData(weight);
 	}
+	~GraphNode();
 	std::vector<int> neighbors;
 	std::vector<int> inEdges;
     GraphNodeData *data;
@@ -23,6 +24,7 @@ public:
 
 class Graph {
 public:
+    ~Graph();
 	std::vector<GraphNode*> vertices;
 	void addVertex(int weight);
 	void addEdge (int from, int to);
