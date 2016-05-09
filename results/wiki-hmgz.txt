@@ -1,0 +1,21 @@
+I am graph processing system!
+verbose mode disabled
+epsilon: 1e-08
+damping: 0.5
+max iterations: 10
+Delta: 1.20706e+06
+Delta: 29240.1
+Delta: 3543.73
+Delta: 514.421
+Delta: 73.2055
+Delta: 10.3203
+Delta: 1.45624
+Delta: 0.207054
+Delta: 0.0298992
+Delta: 0.00442565
+Iterations completed: 10
+Vertices touched: 23943850
+Edges touched: 50214100
+Number of nodes: 2394385
+Number of edges: 5021410
+42.282

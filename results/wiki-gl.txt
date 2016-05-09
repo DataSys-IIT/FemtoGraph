@@ -1,0 +1,39 @@
+data/wiki-Talk.txt
+This non-commercial license of GraphLab Create is assigned to bwalter4@hawk.iit.edu and will expire on March 21, 2017. For commercial licensing options, visit https://dato.com/buy/.
+Read 4031324 lines. Lines per second: 922970
+Finished parsing file /home/azureuser/GraphZScratch/data/wiki-Talk.txt
+Parsing completed. Parsed 5021410 lines in 4.55497 secs.
+Counting out degree
+Done counting out degree
++-----------+-----------------------+
+| Iteration | L1 change in pagerank |
++-----------+-----------------------+
+| 1         | 1.2158e+06            |
+| 2         | 38007.7               |
+| 3         | 8088.57               |
+| 4         | 1300.12               |
+| 5         | 429.229               |
+| 6         | 123.568               |
+| 7         | 39.4992               |
+| 8         | 12.5532               |
+| 9         | 4.09643               |
+| 10        | 1.35906               |
++-----------+-----------------------+
++------+----------------+-------------------+
+| __id |    pagerank    |       delta       |
++------+----------------+-------------------+
+|  5   | 2.33947342412  | 7.59872137639e-05 |
+|  7   | 0.508741444926 | 8.72784543859e-07 |
+|  8   | 0.564769135354 | 1.94643927842e-06 |
+|  10  | 0.72714074718  | 1.71864872508e-05 |
+|  27  | 0.527076188361 | 2.79793333902e-06 |
+|  29  | 0.603613886013 | 7.51904863372e-07 |
+|  33  | 161.564597705  |  0.00210547780287 |
+|  47  | 3.47741026272  |  0.00018135679091 |
+|  50  | 15.1023959707  | 0.000626128812781 |
+|  52  | 2.94459327669  | 4.71033150462e-05 |
++------+----------------+-------------------+
+[2394385 rows x 3 columns]
+Note: Only the head of the SFrame is printed.
+You can use print_rows(num_rows=m, num_columns=n) to print more rows and columns.
+time: 11.8486919403

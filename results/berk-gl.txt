@@ -1,0 +1,39 @@
+data/web-BerkStan.txt
+This non-commercial license of GraphLab Create is assigned to bwalter4@hawk.iit.edu and will expire on March 21, 2017. For commercial licensing options, visit https://dato.com/buy/.
+Read 3753296 lines. Lines per second: 548688
+Finished parsing file /home/azureuser/GraphZScratch/data/web-BerkStan.txt
+Parsing completed. Parsed 7600595 lines in 7.44039 secs.
+Counting out degree
+Done counting out degree
++-----------+-----------------------+
+| Iteration | L1 change in pagerank |
++-----------+-----------------------+
+| 1         | 420822                |
+| 2         | 128388                |
+| 3         | 36609.3               |
+| 4         | 11361.7               |
+| 5         | 3859.86               |
+| 6         | 1476.56               |
+| 7         | 611.974               |
+| 8         | 261.485               |
+| 9         | 115.316               |
+| 10        | 52.6606               |
++-----------+-----------------------+
++------+----------------+-------------------+
+| __id |    pagerank    |       delta       |
++------+----------------+-------------------+
+|  5   |  1.4653478665  | 0.000136804308353 |
+|  7   | 2.76225747277  | 0.000195803012911 |
+|  8   | 1.36152667949  | 0.000131042609841 |
+|  10  | 0.581248625758 | 8.70106235329e-06 |
+|  27  |      0.5       |        0.0        |
+|  29  | 0.519875956601 | 6.25121087017e-06 |
+|  33  | 980.934618706  |  0.0134956701266  |
+|  47  | 2.96119391405  |  0.00108219445463 |
+|  50  |  2.1023514963  | 0.000505160014734 |
+|  52  | 2.96541360814  |  0.00108501984987 |
++------+----------------+-------------------+
+[685230 rows x 3 columns]
+Note: Only the head of the SFrame is printed.
+You can use print_rows(num_rows=m, num_columns=n) to print more rows and columns.
+time: 12.2126879692
