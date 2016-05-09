@@ -3,6 +3,7 @@
 #include <list>
 #include <vector>
 #include <cmath>
+#include <limits>
 #include "graph.hpp"
 
 int main(int argc, char *argv[])
@@ -80,12 +81,13 @@ void Graph::pagerank (double alpha, double epsilon, int maxIterations) {
 	double linkResult, delta, total_delta = std::numeric_limits<double>::max(), old;
     int iteration = 0;
 	std::list<int>::const_iterator inEdgeIter;
-	std::vector<GraphNode*>::const_iterator nodePtrIter;
+	std::vector<GraphNode*>::const_iterator nodePtrIter, end;
+	end = vertices.end();
 	GraphNode *v;
 	int nodeTouchCount = 0, edgeTouchCount = 0;
     while (iteration < maxIterations && total_delta >= epsilon) {
         total_delta = 0;
-        for (nodePtrIter = vertices.begin(); nodePtrIter != vertices.end(); ++nodePtrIter) {
+        for (nodePtrIter = vertices.begin(); nodePtrIter != end; ++nodePtrIter) {
             nodeTouchCount++;
             v = *nodePtrIter;
             linkResult = 0;
