@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <limits>
+#include <sys/time.h>
 #include "graph.hpp"
 
 int main(int argc, char *argv[])
@@ -17,13 +18,13 @@ int main(int argc, char *argv[])
 	readGraph(g2, argv[1]);
 	g2.print();
 	g2.printRank();
-	time_t start, end;
+	struct timeval start, end;
 	double elapsed;
-	time(&start);
+	gettimeofday(&start, NULL);
     g2.pagerank(0.5, .000000001, 12);
 //    g2.pagerank(0.5, .01, 12);
-	time(&end);
-	elapsed = difftime(end, start);
+	gettimeofday(&end, NULL);
+    elapsed = ((end.tv_sec-start.tv_sec)*1000000 + end.tv_usec-start.tv_usec) / (double)1000000;
 	g2.printRank();
 	std::cout << "Number of nodes: " << g2.size() << std::endl;
 	std::cout << "Number of edges: " << g2.edgeCount() << std::endl;
