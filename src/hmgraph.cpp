@@ -5,6 +5,7 @@
 #include <cmath>
 #include <limits>
 #include <map>
+#include <sys/time.h>
 #include "hmgraph.hpp"
 
 int main(int argc, char *argv[])
