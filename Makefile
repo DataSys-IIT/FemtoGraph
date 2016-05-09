@@ -1,6 +1,8 @@
 CPP=g++
 CPPFLAGS=-std=c++11 -g
 
+all: graph hmgraph
+
 hmgraph: src/hmgraph.cpp
 	$(CPP) $(CPPFLAGS) src/hmgraph.cpp -o bin/hmgraph
 

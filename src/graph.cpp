@@ -149,7 +149,7 @@ void readGraph (Graph& g, std::string filename) {
 	// return to beginning of file
 	infile.clear();
 	infile.seekg(0, std::ios::beg);
-	while (infile >> from >> to) {
+	while (infile >> from >> std::skipws >> to) {
 		g.addEdge(from-1, to-1);
 	}
 }
