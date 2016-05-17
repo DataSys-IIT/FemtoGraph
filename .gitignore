@@ -1,4 +1,3 @@
-bin/
 *.dSYM/
 data/
 .DS_Store
