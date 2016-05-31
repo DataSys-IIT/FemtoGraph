@@ -9,7 +9,7 @@
 #include "mtgraph.hpp"
 #include <thread>
 #include <queue>
-
+#include "tqueue.hpp"
 int main(int argc, char *argv[])
 {
 //	double epsilon, damping;
