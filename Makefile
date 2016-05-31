@@ -9,7 +9,7 @@ hmgraph: src/hmgraph.cpp
 graph: src/graph.cpp
 	$(CPP) $(CPPFLAGS) src/graph.cpp -o bin/graph
 
-mtgraph: src/mtgraph.cpp
+mtgraph:  src/mtgraph.o src/tqueue.o
 	$(CPP) $(CPPFLAGS) src/mtgraph.cpp src/tqueue.cpp  -o bin/mtgraph
 
 queue-test: src/tqueue.cpp

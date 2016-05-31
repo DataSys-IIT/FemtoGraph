@@ -6,10 +6,10 @@
 #include <limits>
 #include <map>
 #include <sys/time.h>
-#include "mtgraph.hpp"
 #include <thread>
 #include <queue>
 #include "tqueue.hpp"
+#include "mtgraph.hpp"
 int main(int argc, char *argv[])
 {
 //	double epsilon, damping;
@@ -72,7 +72,7 @@ void Graph::threadMain () {
         // but another thread may pop something in between and then we will have undefined results
         if (!taskQueue.empty()) {
 	  int nodeId = taskQueue.front();
-	  taskQueue.pop();
+	  taskQueue.dequeue();
 
             // TODO Add locking of neighbor nodes
             // I did not add this because I do not completely understand how the graphlab model locking works

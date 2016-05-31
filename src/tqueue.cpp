@@ -66,4 +66,10 @@ namespace threadblob {
       return false;
   }
 
+
+  template <class T>
+  T queue<T>::front() {
+    return list.front;
+  }
+
 }

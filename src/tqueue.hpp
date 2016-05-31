@@ -1,9 +1,14 @@
 #include <vector>
 #include <mutex>
 
-namespace threadblob { 
 
-  template<class T> class queue {
+
+#ifndef __queue_H_INCLUDED__
+#define __queue_H_INCLUDED__
+namespace threadblob{
+
+
+template<class T> class queue {
     
   public:
     queue();
@@ -14,10 +19,12 @@ namespace threadblob {
     T dequeue();
     int size();
     bool empty();
+    T front();
   private:
     std::vector<T> list;
     std::unique_lock<std::mutex> list_mutex;
     std::unique_lock<std::mutex> audo_mutex;
   };
-  
+ 
 }
+#endif
