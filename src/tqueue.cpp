@@ -5,24 +5,37 @@
 
 int main(void) {
 
-
+  
 }
 
 
 template <class T>
 TQueue<T>::TQueue() {
-  list_mutex(list, std::defer_lock);
+
 }
 
 
 template <class T>
 TQueue<T>::~TQueue() {
+  list_mutex.unlock();
   delete list_mutex;
 }
 
 template <class T>
 void TQueue<T>::enqueue(T in) {
   list.push_back(in);
+}
+
+
+template <class T>
+void TQueue<T>::pause() {
+  list_mutex(list);
+  
+}
+
+template <class T>
+void TQueue<T>::unpause() {
+  list_mutex.unlock();
 }
 
 

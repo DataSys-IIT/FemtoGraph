@@ -6,6 +6,8 @@ template<class T> class TQueue {
 public:
   TQueue();
   ~TQueue();
+  void pause();
+  void unpause();
   void enqueue(T in);
   T dequeue();
   int size();
