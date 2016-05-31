@@ -27,12 +27,19 @@ void TQueue<T>::enqueue(T in) {
 }
 
 
+
+/* 
+ * Locks entire list and does nothing with it until unpause()
+ * is called. This is for solving some problems with concurrency
+ */
 template <class T>
 void TQueue<T>::pause() {
   list_mutex(list);
   
 }
 
+
+/* unlocks permalock called by pause() */ 
 template <class T>
 void TQueue<T>::unpause() {
   list_mutex.unlock();
@@ -41,6 +48,7 @@ void TQueue<T>::unpause() {
 
 template <class T>
 T TQueue<T>::dequeue() {
+  std::lock_guard<std::mutex> auto_mutex(list);
   T result = list.front;
   list.erase(list.size-1);
   return result;
@@ -49,12 +57,14 @@ T TQueue<T>::dequeue() {
 
 template <class T>
 int TQueue<T>::size() {
+  std::lock_guard<std::mutex> auto_mutex(list);  
   return list.size();
 }
 
 
 template <class T>
 bool TQueue<T>::empty() {
+  std::lock_guard<std::mutex> auto_mutex(list);
   if(list.size() == 0)
     return true;
   else

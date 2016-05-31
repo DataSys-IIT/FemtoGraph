@@ -15,4 +15,5 @@ public:
 private:
   std::vector<T> list;
   std::unique_lock<std::mutex> list_mutex;
+  std::unique_lock<std::mutex> audo_mutex;
 };
