@@ -8,7 +8,7 @@
 #include <sys/time.h>
 #include "mtgraph.hpp"
 #include <thread>
-
+#include <queue>
 
 int main(int argc, char *argv[])
 {
@@ -70,8 +70,9 @@ void Graph::threadMain () {
         // TODO make queue thread safe
         // this will not work right now - the empty check may return false
         // but another thread may pop something in between and then we will have undefined results
-        if (!this->taskQueue.empty()) {
-            int nodeId = this->taskQueue.pop_front();
+        if (!taskQueue.empty()) {
+	  int nodeId = taskQueue.front();
+	  taskQueue.pop();
 
             // TODO Add locking of neighbor nodes
             // I did not add this because I do not completely understand how the graphlab model locking works
@@ -82,13 +83,13 @@ void Graph::threadMain () {
 
 // launches worker threads
 void Graph::start (int numThreads) {
-    std::vector<std::thread*> threads;
-    for (int i = 0; i < numThreads; i++) {
-        threads.push_back(new std::thread(threadMain));
-    }
-    for (int i = 0; i < numThreads; i++) {
-        threads[i]->join();
-    }
+  std::vector<std::thread*> threads;
+  for (int i = 0; i < numThreads; i++) {
+    threads.push_back(new std::thread(&Graph::threadMain, this));
+  }
+  for (int i = 0; i < numThreads; i++) {
+    threads[i]->join();
+  }
 }
 
 void Graph::addVertex (int weight) {
