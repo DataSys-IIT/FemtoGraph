@@ -1,7 +1,7 @@
 #include <vector>
 #include <unordered_map>
 #include <queue>
-#include "tqueue.hpp"
+#include "queue.hpp"
 
 //TODO Add deconstructors - NEED TO CLEANUP
 
@@ -28,10 +28,15 @@ public:
 class Graph {
 public:
 	std::unordered_map<int, GraphNode*> vertices;
-    threadblob::queue<int> taskQueue; //TODO find a threadsafe queue implmentation
+  tqueue<int> *  taskQueue; //TODO find a threadsafe queue implmentation
     Graph() {
         done = false;
+	taskQueue = new tqueue<int>();
     }
+
+  ~Graph() {
+    delete taskQueue;
+  }
     bool done;
     void update (int nodeId);
     void threadMain ();
