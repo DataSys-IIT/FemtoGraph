@@ -12,6 +12,9 @@ graph: src/graph.cpp
 mtgraph: src/mtgraph.cpp
 	$(CPP) $(CPPFLAGS) src/mtgraph.cpp -o bin/mtgraph
 
+queue-test: src/tqueue.cpp
+	$(CPP) $(CPPFLAGS) src/tqueue.cpp -o bin/tqueue-test
+
 test: graph
 	bin/graph
 
