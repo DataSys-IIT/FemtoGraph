@@ -10,7 +10,7 @@ graph: src/graph.cpp
 	$(CPP) $(CPPFLAGS) src/graph.cpp -o bin/graph
 
 mtgraph: src/mtgraph.cpp
-	$(CPP) $(CPPFLAGS) src/mtgraph.cpp -o bin/mtgraph
+	$(CPP) $(CPPFLAGS) src/mtgraph.cpp src/tqueue.cpp  -o bin/mtgraph
 
 queue-test: src/tqueue.cpp
 	$(CPP) $(CPPFLAGS) src/tqueue.cpp -o bin/tqueue-test

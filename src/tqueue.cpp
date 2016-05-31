@@ -2,13 +2,6 @@
 #include "tqueue.hpp"
 #include <mutex> 
 
-
-int main(void) {
-  
-  
-}
-
-
 namespace threadblob {
 
   template <class T>
