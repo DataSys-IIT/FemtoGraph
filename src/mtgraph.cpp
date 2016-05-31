@@ -90,6 +90,10 @@ void Graph::start (int numThreads) {
   for (int i = 0; i < numThreads; i++) {
     threads[i]->join();
   }
+
+  for(int i=0;i<numThreads;i++) {
+    delete threads[i];
+  }
 }
 
 void Graph::addVertex (int weight) {
