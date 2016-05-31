@@ -6,5 +6,6 @@ public:
   T dequeue();
 private:
   std::vector<T> list;
+  std::mutex list_mutex;
 
 };
