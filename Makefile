@@ -9,6 +9,9 @@ hmgraph: src/hmgraph.cpp
 graph: src/graph.cpp
 	$(CPP) $(CPPFLAGS) src/graph.cpp -o bin/graph
 
+mtgraph: src/mtgraph.cpp
+	$(CPP) $(CPPFLAGS) src/graph.cpp -o bin/mtgraph
+
 test: graph
 	bin/graph
 
