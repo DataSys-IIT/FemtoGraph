@@ -22,7 +22,6 @@ public:
 private:
   std::vector<T> list;
   std::mutex global_mutex;
-  std::unique_lock<std::mutex> auto_mutex;
 };
 template <class T>
 tqueue<T>::tqueue() {
@@ -61,27 +60,31 @@ void tqueue<T>::unpause() {
 
 template <class T>
 T tqueue<T>::dequeue() {
-  std::lock_guard<std::mutex> auto_mutex(global_mutex);
+  global_mutex.lock();
   T result = list.front();
   list.erase(list.end()); //maybe front
+  global_mutex.unlock();
   return result;
 }
 
   
 template <class T>
 int tqueue<T>::size() {
-  std::lock_guard<std::mutex> auto_mutex(global_mutex);  
   return list.size();
 }
 
 
 template <class T>
 bool tqueue<T>::empty() {
-  std::lock_guard<std::mutex> auto_mutex(global_mutex);
-  if(list.size() == 0)
+  global_mutex.lock();
+  if(list.size() == 0) {
+    global_mutex.unlock();
     return true;
-  else
+  }
+  else {
+    global_mutex.unlock();
     return false;
+  }
 }
 
 
