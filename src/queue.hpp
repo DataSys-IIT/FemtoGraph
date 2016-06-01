@@ -22,7 +22,6 @@ public:
 private:
   std::vector<T> list;
   std::mutex global_mutex;
-  std::unique_lock<std::mutex> list_mutex;
   std::unique_lock<std::mutex> auto_mutex;
 };
 template <class T>
@@ -33,7 +32,7 @@ tqueue<T>::tqueue() {
 
 template <class T>
 tqueue<T>::~tqueue() {
-  list_mutex.unlock();
+ 
 }
 
 template <class T>
@@ -49,14 +48,14 @@ void tqueue<T>::enqueue(T in) {
  */
 template <class T>
 void tqueue<T>::pause() {
-  list_mutex(list);  
+  global_mutex.lock();
 }
 
 
 /* unlocks permalock called by pause() */ 
 template <class T>
 void tqueue<T>::unpause() {
-  list_mutex.unlock();
+  global_mutex.unlock();
 }
 
 
