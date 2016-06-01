@@ -30,9 +30,12 @@ public:
   GraphNode(int weight) {
     data = new GraphNodeData(weight);
   }
+  void lock();
+  void unlock();
   std::vector<int> neighbors;
   std::vector<int> inEdges;
   GraphNodeData *data;
+  std::mutex nodelock;
 };
 
 //WARNING Queue is not thread safe
@@ -67,6 +70,14 @@ void printVec (std::vector<GraphNode> ll);
 
 
 
+void GraphNode::lock() {
+  nodelock.lock();
+}
+
+
+void GraphNode::unlock() {
+  nodelock.unlock();
+}
 
 // TODO implement this function for pagerank
 void Graph::update (int nodeId) {
