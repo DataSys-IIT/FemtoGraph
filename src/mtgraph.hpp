@@ -222,7 +222,7 @@ void readGraphEdges (Graph g, std::string filename) {
   int from, to;
   while (infile >> from >> to) {
     g.addEdge(from-1, to-1);
-	}
+  }
 }
 
 // expects to/from edge pairs
