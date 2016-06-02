@@ -22,7 +22,12 @@ public:
   GraphNodeData(int weight) {
     this->weight = weight;
   }
+  ~GraphNodeData();
 };
+
+
+GraphNodeData::~GraphNodeData() {
+}
 
 class GraphNode {
 public:
@@ -32,11 +37,18 @@ public:
   }
   void lock();
   void unlock();
+  ~GraphNode();
   std::vector<int> neighbors;
   std::vector<int> inEdges;
   GraphNodeData *data;
   std::mutex nodelock;
 };
+
+
+GraphNode::~GraphNode(){
+  delete data;
+}
+
 
 //WARNING Queue is not thread safe
 class Graph {
