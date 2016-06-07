@@ -26,6 +26,7 @@ public:
 };
 
 
+//Destructor
 GraphNodeData::~GraphNodeData() {
 }
 
@@ -45,6 +46,7 @@ public:
 };
 
 
+//Destructor
 GraphNode::~GraphNode(){
   delete data;
 }
