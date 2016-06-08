@@ -7,7 +7,7 @@
 #include <limits>
 #include <sstream>
 #include <sys/time.h>
-
+#include <queue>
 //TODO Add deconstructors - NEED TO CLEANUP
 
 class GraphNodeData {
@@ -29,10 +29,17 @@ public:
   GraphNodeData *data;
 };
 
+
+typedef struct {
+  double data;
+  int to;
+} message_t;
+
 class Graph {
 public:
   ~Graph();
   std::vector<GraphNode*> vertices;
+  std::queue<message_t*> messagequeue;
   void addVertex(int weight);
   void addEdge (int from, int to);
   void print();
