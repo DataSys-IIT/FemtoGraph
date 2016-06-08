@@ -24,6 +24,7 @@ public:
     data = new GraphNodeData(weight);
   }
   ~GraphNode();
+  void compute(std::vector<message> * messages);
   std::vector<int> neighbors;
   std::vector<int> inEdges;
   GraphNodeData *data;
@@ -57,10 +58,15 @@ void printVec (std::vector<GraphNode> ll);
 
 
 
+
 GraphNode::~GraphNode () {
   if (data != NULL) {
     delete data;
   }
+}
+
+void GraphNode::compute(std::vector<message> * messages) {
+
 }
 
 Graph::~Graph () {
