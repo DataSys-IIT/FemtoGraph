@@ -52,6 +52,13 @@ GraphNode::~GraphNode(){
 }
 
 
+struct message {
+
+ int to;
+ double data;
+};
+
+
 //WARNING Queue is not thread safe
 class Graph {
 public:
@@ -75,6 +82,7 @@ public:
   void printRank();
   int size();
   int edgeCount();
+  void sendMessageToNodes(std::vector<int> nodes);
   void pagerank (double alpha, double epsilon, int maxIterations);
 };
 
@@ -118,6 +126,12 @@ void Graph::threadMain () {
         }
     }
 }
+
+/* appends a message to the message queue for the next iteration */ 
+void Graph::sendMessageToNodes(std::vector<int> nodes) {
+  
+}
+
 
 // launches worker threads
 void Graph::start (int numThreads) {

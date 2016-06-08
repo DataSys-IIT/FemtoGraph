@@ -64,6 +64,7 @@ Graph::~Graph () {
   
 }
 
+
 void Graph::addVertex (int weight) {
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
