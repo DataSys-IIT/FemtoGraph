@@ -30,16 +30,17 @@ public:
 };
 
 
-typedef struct {
+class message {
+public:
   double data;
   int to;
-} message_t;
+};
 
 class Graph {
 public:
   ~Graph();
   std::vector<GraphNode*> vertices;
-  std::queue<message_t*> messagequeue;
+  std::queue<message*> messagequeue;
   void addVertex(int weight);
   void addEdge (int from, int to);
   void print();
