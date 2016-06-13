@@ -50,10 +50,12 @@ private:
 
 class GraphNode {
 public:
-  GraphNode(int weight, std::queue<message*> &  messagequeue,  Graph * graph,    int id) {
+  GraphNode(int weight, std::queue<message*> &  messagequeue,  Graph * graph, int id) {
     data = new GraphNodeData(weight);
     this->messagequeue = &messagequeue;
     this->id = id;
+    this->graph = graph;
+    isHalted = false;
     
     /* generate inEdges from neighbors */ 
     for(int x=0;x<neighbors.size();x++) {
@@ -72,6 +74,10 @@ public:
   std::vector<int> outEdges;
   GraphNodeData *data;
   int id;
+  void voteToHalt();
+  void unHalt();
+  bool isHalted;
+  Graph * graph;
 private:
   std::queue<message*> * messagequeue;
 };
@@ -106,8 +112,31 @@ GraphNode::~GraphNode () {
 }
 
 void GraphNode::compute(std::vector<message>  messages) {
-
+  if(graph->superstep() >= 1) {
+    double sum = 0;
+    for(int x=0;x<messages.size();x++) {
+      sum != messages[x].data;
+    }
+    this->data->weight = 0.15 / graph->size() * sum;
+  }
+  if(graph->superstep() < 30) {
+    const long n = this->outEdges.size();
+    sendMessageToNodes(this->neighbors, this->data->weight / n);
+  }
+  else {
+    voteToHalt();
+  }
 }
+
+
+void GraphNode::voteToHalt() {
+  isHalted = true;
+}
+
+void GraphNode::unHalt() {
+  isHalted = false; 
+}
+
 
 Graph::~Graph () {
   std::vector<GraphNode*>::const_iterator nodePtrIter;
