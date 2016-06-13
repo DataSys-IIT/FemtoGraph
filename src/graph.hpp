@@ -29,16 +29,28 @@ public:
 
 class GraphNode {
 public:
-  GraphNode(int weight, std::queue<message*> &  messagequeue) {
+  GraphNode(int weight, std::queue<message*> &  messagequeue,   std::vector<GraphNode*>  & vertices, int id) {
     data = new GraphNodeData(weight);
     this->messagequeue = &messagequeue;
+    this->id = id;
+
+    /* generate inEdges from neighbors */ 
+    for(int x=0;x<neighbors.size();x++) {
+      for(int y=0;y<vertices[x]->outEdges.size();y++) {
+	if(vertices[vertices[x]->outEdges[y]]->id == id) {
+	  this->inEdges.push_back(vertices[x]->id);
+	}
+      }
+    }
   }
   ~GraphNode();
   void compute(std::vector<message>  messages);
   void sendMessageToNodes(std::vector<int> nodes, double msg);
   std::vector<int> neighbors;
   std::vector<int> inEdges;
+  std::vector<int> outEdges;
   GraphNodeData *data;
+  int id;
 private:
   std::queue<message*> * messagequeue;
 };
@@ -91,7 +103,7 @@ GraphNode::~GraphNode () {
 }
 
 void GraphNode::compute(std::vector<message>  messages) {
-
+  
 }
 
 Graph::~Graph () {
@@ -115,7 +127,7 @@ int Graph::superstep() {
 void Graph::addVertex (int weight) {
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
-  vertices.push_back(new GraphNode(weight,messagequeue));
+  vertices.push_back(new GraphNode(weight,messagequeue, vertices, vertices.size()));
 }
 
 void Graph::addEdge (int from, int to) {
