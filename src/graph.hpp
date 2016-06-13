@@ -10,38 +10,46 @@
 #include <queue>
 //TODO Add deconstructors - NEED TO CLEANUP
 
-class GraphNodeData {
-public:
-  double weight;
-  GraphNodeData(int weight) {
-    this->weight = weight;
-  }
-};
-
-class GraphNode {
-public:
-  GraphNode(int weight) {
-    data = new GraphNodeData(weight);
-  }
-  ~GraphNode();
-  void compute(std::vector<message> * messages);
-  std::vector<int> neighbors;
-  std::vector<int> inEdges;
-  GraphNodeData *data;
-};
-
-
 class message {
 public:
   double data;
   int to;
 };
 
+
+class GraphNodeData {
+public:
+  double weight;
+  GraphNodeData(int weight) {
+    this->weight = weight;
+  }
+
+};
+
+class GraphNode {
+public:
+  GraphNode(int weight, std::queue<message*>  messagequeue) {
+    data = new GraphNodeData(weight);
+    this.messagequeue = messagequeue;
+  }
+  ~GraphNode();
+  void compute(std::vector<message>  messages);
+  void sendMessageToNodes(std::vector<int> nodes);
+  std::vector<int> neighbors;
+  std::vector<int> inEdges;
+  GraphNodeData *data;
+private:
+  std::queue<message*> messagequeue;
+};
+
+
+
 class Graph {
 public:
+  Graph();
   ~Graph();
   std::vector<GraphNode*> vertices;
-  std::queue<message*> messagequeue;
+  std::queue<message*>  messagequeue;
   void addVertex(int weight);
   void addEdge (int from, int to);
   void print();
@@ -49,6 +57,10 @@ public:
   int size();
   int edgeCount();
   void pagerank (double alpha, double epsilon, int maxIterations);
+  int superstep();
+private:
+  int superstepcount;
+  
 };
 
 void readGraph (Graph& g, std::string filename);
@@ -56,6 +68,10 @@ void readGraphEdges (Graph g, std::string filename);
 void printVec (std::vector<GraphNode> ll);
 
 
+/* appends a message to the message queue for the next iteration */ 
+void GraphNode::sendMessageToNodes(std::vector<int> nodes) {
+  
+}
 
 
 
@@ -65,7 +81,7 @@ GraphNode::~GraphNode () {
   }
 }
 
-void GraphNode::compute(std::vector<message> * messages) {
+void GraphNode::compute(std::vector<message>  messages) {
 
 }
 
@@ -78,11 +94,19 @@ Graph::~Graph () {
   
 }
 
+Graph::Graph() {
+  superstepcount = 0;
+}
+
+
+int Graph::superstep() {
+  return superstepcount;
+}
 
 void Graph::addVertex (int weight) {
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
-  vertices.push_back(new GraphNode(weight));
+  vertices.push_back(new GraphNode(weight,messagequeue));
 }
 
 void Graph::addEdge (int from, int to) {
