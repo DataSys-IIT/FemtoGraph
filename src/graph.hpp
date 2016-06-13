@@ -12,6 +12,7 @@
 
 class message {
 public:
+  message(int to, double data);
   double data;
   int to;
 };
@@ -28,18 +29,18 @@ public:
 
 class GraphNode {
 public:
-  GraphNode(int weight, std::queue<message*>  messagequeue) {
+  GraphNode(int weight, std::queue<message*> &  messagequeue) {
     data = new GraphNodeData(weight);
-    this.messagequeue = messagequeue;
+    this->messagequeue = &messagequeue;
   }
   ~GraphNode();
   void compute(std::vector<message>  messages);
-  void sendMessageToNodes(std::vector<int> nodes);
+  void sendMessageToNodes(std::vector<int> nodes, double msg);
   std::vector<int> neighbors;
   std::vector<int> inEdges;
   GraphNodeData *data;
 private:
-  std::queue<message*> messagequeue;
+  std::queue<message*> * messagequeue;
 };
 
 
@@ -69,10 +70,18 @@ void printVec (std::vector<GraphNode> ll);
 
 
 /* appends a message to the message queue for the next iteration */ 
-void GraphNode::sendMessageToNodes(std::vector<int> nodes) {
-  
+void GraphNode::sendMessageToNodes(std::vector<int> nodes, double msg) {
+  for(int x=0;x<nodes.size();x++) {
+    message *  m = new message(nodes[x], msg);
+    messagequeue->push(m);
+  }
 }
 
+
+message::message(int to, double data) {
+  this->to = to;
+  this->data = data;
+}
 
 
 GraphNode::~GraphNode () {
