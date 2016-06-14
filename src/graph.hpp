@@ -159,9 +159,19 @@ bool Graph::isDone() {
     if(vertices[i]->isHalted == false)
       result = false;
   }
-
+  
   return result;
 }
+
+void Graph::start() {
+  while(!isDone()) {
+    for(int x=0;x<vertices.size();x++) {
+      //message retreival overhead is too high. Hang on
+      //vertices[x]->compute()
+    }
+  }
+}
+
 
 
 
