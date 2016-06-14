@@ -41,6 +41,8 @@ public:
   int edgeCount();
   void pagerank (double alpha, double epsilon, int maxIterations);
   int superstep();
+  void start();
+  bool isDone();
 private:
   int superstepcount;
   
@@ -151,6 +153,17 @@ Graph::Graph() {
   superstepcount = 0;
 }
 
+bool Graph::isDone() {
+  bool result = true;
+  for(int i=0;i<vertices.size();i++) {
+    if(vertices[i]->isHalted == false)
+      result = false;
+  }
+
+  return result;
+}
+
+
 
 int Graph::superstep() {
   return superstepcount;
@@ -159,8 +172,7 @@ int Graph::superstep() {
 void Graph::addVertex (int weight) {
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
-  vertices.push_back(new GraphNode(weight,messagequeue, this, vertices.size()));
-}
+  vertices.push_back(new GraphNode(weight,messagequeue, this, vertices.size()));}
 
 void Graph::addEdge (int from, int to) {
   vertices[from]->neighbors.push_back(to);
