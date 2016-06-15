@@ -150,7 +150,7 @@ void GraphNode::compute(const std::vector<message*> *  messages) {
     for(int x=0;x<messages->size();x++) {
       sum += (*messages)[x]->data;
     }
-    this->data->weight = 0.15 / graph->size() * sum;
+    this->data->weight = 0.15 / graph->size() + 0.85 * sum;
   }
   if(graph->superstep() < 30) {
     const long n = this->outEdges.size();
