@@ -148,7 +148,7 @@ void GraphNode::compute(const std::vector<message*> *  messages) {
   if(graph->superstep() >= 1) {
     double sum = 0;
     for(int x=0;x<messages->size();x++) {
-      sum != (*messages)[x]->data;
+      sum += (*messages)[x]->data;
     }
     this->data->weight = 0.15 / graph->size() * sum;
   }
