@@ -86,7 +86,7 @@ public:
     }
   }
   ~GraphNode();
-  void compute(std::vector<message>  messages);
+  void compute(const std::vector<message*> *  messages);
   void sendMessageToNodes(std::vector<int> nodes, double msg);
   std::vector<int> neighbors;
   std::vector<int> inEdges;
@@ -141,14 +141,14 @@ GraphNode::~GraphNode () {
  * Pregel 'update' function. Called virtually in parallel from 
  * the context of each vertex. 
  */  
-void GraphNode::compute(std::vector<message>  messages) {
+void GraphNode::compute(const std::vector<message*> *  messages) {
     #if ECC
   if(messagequeue->size() != graph->vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
   #endif
   if(graph->superstep() >= 1) {
     double sum = 0;
-    for(int x=0;x<messages.size();x++) {
-      sum != messages[x].data;
+    for(int x=0;x<messages->size();x++) {
+      sum != (*messages)[x]->data;
     }
     this->data->weight = 0.15 / graph->size() * sum;
   }
@@ -224,8 +224,7 @@ void Graph::start() {
   #endif
   while(!isDone()) {
     for(int x=0;x<vertices.size();x++) {
-      //message retreival overhead is too high. Hang on
-      //vertices[x]->compute()
+      vertices[x]->compute(messagequeue.at(x));
     }
   }
 }
