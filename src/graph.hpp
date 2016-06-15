@@ -228,7 +228,11 @@ int Graph::superstep() {
 void Graph::addVertex (int weight) {
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
-  vertices.push_back(new GraphNode(weight,messagequeue, this, vertices.size()));}
+  vertices.push_back(new GraphNode(weight,messagequeue, this, vertices.size()));
+  std::vector<message*> * nodequeue = new std::vector<message*>();
+  messagequeue.push_back(nodequeue);
+
+}
 
 
 //adds an edge to the graph
