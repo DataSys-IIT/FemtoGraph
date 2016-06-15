@@ -32,7 +32,7 @@ public:
   Graph();
   ~Graph();
   std::vector<GraphNode*> vertices;
-  std::queue<message*>  messagequeue;
+  std::vector<std::vector<message*>*>  messagequeue;
   void addVertex(int weight);
   void addEdge (int from, int to);
   void print();
@@ -52,7 +52,7 @@ private:
 
 class GraphNode {
 public:
-  GraphNode(int weight, std::queue<message*> &  messagequeue,  Graph * graph, int id) {
+  GraphNode(int weight, std::vector<std::vector<message*>*> &  messagequeue,  Graph * graph, int id) {
     data = new GraphNodeData(weight);
     this->messagequeue = &messagequeue;
     this->id = id;
@@ -81,7 +81,7 @@ public:
   bool isHalted;
   Graph * graph;
 private:
-  std::queue<message*> * messagequeue;
+  std::vector<std::vector<message*>*> * messagequeue;
 };
 
 
@@ -96,7 +96,9 @@ void printVec (std::vector<GraphNode> ll);
 void GraphNode::sendMessageToNodes(std::vector<int> nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
     message *  m = new message(nodes[x], msg);
-    messagequeue->push(m);
+    int nodeid = graph->vertices[nodes[x]]->id;
+    std::vector<message*> * messagetmp = messagequeue->at(nodeid);
+    (*messagetmp).push_back(m);
   }
 }
 
@@ -145,12 +147,25 @@ Graph::~Graph () {
   for (nodePtrIter = vertices.begin(); nodePtrIter != vertices.end(); ++nodePtrIter) {
     delete (*nodePtrIter);
   }
+
+  std::vector<std::vector<message*>*>::const_iterator row;
+  std::vector<message*>::const_iterator col;
+  for(row = messagequeue.begin() ;row != messagequeue.end() ; ++row) {
+    for(col = (*row)->begin(); col != (*row)->end(); ++col) {
+      delete *col;
+    }
+    delete *row;;
+  }
   vertices.clear();
   
 }
 
 Graph::Graph() {
   superstepcount = 0;
+  for(int x=0;x<vertices.size();x++) {
+    std::vector<message*> * nodequeue = new std::vector<message*>();
+    messagequeue.push_back(nodequeue);
+  }
 }
 
 bool Graph::isDone() {
