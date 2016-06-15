@@ -8,6 +8,11 @@
 #include <sstream>
 #include <sys/time.h>
 #include <queue>
+#include <iostream>
+
+//enables some expensive validation and error checking
+#define ECC 1
+
 //TODO Add deconstructors - NEED TO CLEANUP
 
 
@@ -137,6 +142,9 @@ GraphNode::~GraphNode () {
  * the context of each vertex. 
  */  
 void GraphNode::compute(std::vector<message>  messages) {
+    #if ECC
+  if(messagequeue->size() != graph->vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
+  #endif
   if(graph->superstep() >= 1) {
     double sum = 0;
     for(int x=0;x<messages.size();x++) {
@@ -198,6 +206,9 @@ Graph::Graph() {
 
 //is every vertex halted?
 bool Graph::isDone() {
+  #if ECC
+  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
+  #endif
   bool result = true;
   for(int i=0;i<vertices.size();i++) {
     if(vertices[i]->isHalted == false)
@@ -208,6 +219,9 @@ bool Graph::isDone() {
 }
 
 void Graph::start() {
+    #if ECC
+  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
+  #endif
   while(!isDone()) {
     for(int x=0;x<vertices.size();x++) {
       //message retreival overhead is too high. Hang on
@@ -226,6 +240,9 @@ int Graph::superstep() {
 
 //adds a vertex to the graph
 void Graph::addVertex (int weight) {
+    #if ECC
+  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
+  #endif
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
   vertices.push_back(new GraphNode(weight,messagequeue, this, vertices.size()));
@@ -237,6 +254,9 @@ void Graph::addVertex (int weight) {
 
 //adds an edge to the graph
 void Graph::addEdge (int from, int to) {
+    #if ECC
+  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
+  #endif
   vertices[from]->neighbors.push_back(to);
   vertices[to]->inEdges.push_back(from);
 }
@@ -244,6 +264,9 @@ void Graph::addEdge (int from, int to) {
 
 //prints out current graph
 void Graph::print () {
+    #if ECC
+  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
+  #endif
   std::vector<int>::const_iterator it;
   for (int i = 0; i < vertices.size(); i++) {
     std::cout << i << "-> ";
