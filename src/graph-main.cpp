@@ -4,4 +4,5 @@
 int main(int argc, char *argv[])
 {
   Graph g;
+  g.start();
 }
