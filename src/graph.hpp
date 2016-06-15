@@ -301,42 +301,6 @@ int Graph::edgeCount () {
   return total;
 }
 
-/**
- * NOT THREAD SAFE
- */
-void Graph::pagerank (double alpha, double epsilon, int maxIterations) {
-  int n = size();
-  double linkResult, delta, total_delta = std::numeric_limits<double>::max(), old;
-  int iteration = 0;
-  std::vector<int>::const_iterator inEdgeIter;
-  std::vector<GraphNode*>::const_iterator nodePtrIter, end;
-  end = vertices.end();
-  GraphNode *v;
-  int nodeTouchCount = 0, edgeTouchCount = 0;
-  while (iteration < maxIterations && total_delta >= epsilon) {
-    total_delta = 0;
-    for (nodePtrIter = vertices.begin(); nodePtrIter != end; ++nodePtrIter) {
-      nodeTouchCount++;
-      v = *nodePtrIter;
-      linkResult = 0;
-      for (inEdgeIter = v->inEdges.begin(); inEdgeIter != v->inEdges.end(); ++inEdgeIter) {
-	// For now, we use 1 for edge weight
-	linkResult += (1.0 / vertices[*inEdgeIter]->neighbors.size()) * vertices[*inEdgeIter]->data->weight;
-	edgeTouchCount++;
-      }
-      old = v->data->weight;
-      v->data->weight = n*((alpha / n) + (1 - alpha) * linkResult/n);
-      delta = fabs(v->data->weight - old);
-      total_delta += delta;
-    }
-    std::cout << "Delta: " << total_delta << std::endl;
-    iteration++;
-  }
-  std::cout << "Iterations completed: " << iteration << std::endl;
-  std::cout << "Vertices touched: " << nodeTouchCount << std::endl;
-  std::cout << "Edges touched: " << edgeTouchCount << std::endl;
-}
-
 
 //prints a list of ints (for debug)
 void printList (std::list<int> ll) {
