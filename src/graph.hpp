@@ -10,6 +10,8 @@
 #include <queue>
 //TODO Add deconstructors - NEED TO CLEANUP
 
+
+/* represents a messaqge for the pregel message queue */
 class message {
 public:
   message(int to, double data);
@@ -18,6 +20,8 @@ public:
 };
 
 
+
+/* data payload (weight) for graph vertex */
 class GraphNodeData {
 public:
   double weight;
@@ -26,7 +30,15 @@ public:
   }
 
 };
+
+
+//declare GraphNode because Graph depends on it
 class GraphNode;
+
+/* represents the entire simulation
+ * Responsible for managing vertexes and calling compute() 
+ * on all of them
+ */ 
 class Graph {
 public:
   Graph();
@@ -49,7 +61,7 @@ private:
 };
 
 
-
+/* represents a vertex in the graph */ 
 class GraphNode {
 public:
   GraphNode(int weight, std::vector<std::vector<message*>*> &  messagequeue,  Graph * graph, int id) {
@@ -86,7 +98,7 @@ private:
 
 
 
-
+//some extra function
 void readGraph (Graph& g, std::string filename);
 void readGraphEdges (Graph g, std::string filename);
 void printVec (std::vector<GraphNode> ll);
@@ -103,18 +115,27 @@ void GraphNode::sendMessageToNodes(std::vector<int> nodes, double msg) {
 }
 
 
+
+//send a message to one vertex
 message::message(int to, double data) {
   this->to = to;
   this->data = data;
 }
 
 
+
+//destructor for graphnode
 GraphNode::~GraphNode () {
   if (data != NULL) {
     delete data;
   }
 }
 
+
+/* 
+ * Pregel 'update' function. Called virtually in parallel from 
+ * the context of each vertex. 
+ */  
 void GraphNode::compute(std::vector<message>  messages) {
   if(graph->superstep() >= 1) {
     double sum = 0;
@@ -133,15 +154,19 @@ void GraphNode::compute(std::vector<message>  messages) {
 }
 
 
+//halts the vertex until it receives a message or all
+//vertexes halt
 void GraphNode::voteToHalt() {
   isHalted = true;
 }
 
+//resume the vertex compute
 void GraphNode::unHalt() {
   isHalted = false; 
 }
 
 
+//dewstructor for graph
 Graph::~Graph () {
   std::vector<GraphNode*>::const_iterator nodePtrIter;
   for (nodePtrIter = vertices.begin(); nodePtrIter != vertices.end(); ++nodePtrIter) {
@@ -160,6 +185,8 @@ Graph::~Graph () {
   
 }
 
+
+//constructor for graph
 Graph::Graph() {
   superstepcount = 0;
   for(int x=0;x<vertices.size();x++) {
@@ -168,6 +195,8 @@ Graph::Graph() {
   }
 }
 
+
+//is every vertex halted?
 bool Graph::isDone() {
   bool result = true;
   for(int i=0;i<vertices.size();i++) {
@@ -189,21 +218,27 @@ void Graph::start() {
 
 
 
-
+//returns current pregel superstep count
 int Graph::superstep() {
   return superstepcount;
 }
 
+
+//adds a vertex to the graph
 void Graph::addVertex (int weight) {
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
   vertices.push_back(new GraphNode(weight,messagequeue, this, vertices.size()));}
 
+
+//adds an edge to the graph
 void Graph::addEdge (int from, int to) {
   vertices[from]->neighbors.push_back(to);
   vertices[to]->inEdges.push_back(from);
 }
 
+
+//prints out current graph
 void Graph::print () {
   std::vector<int>::const_iterator it;
   for (int i = 0; i < vertices.size(); i++) {
@@ -215,6 +250,8 @@ void Graph::print () {
   }
 }
 
+
+//prtints the weight of the vertices
 void Graph::printRank () {
   std::list<int>::const_iterator it;
   for (int i = 0; i < vertices.size(); i++) {
@@ -222,10 +259,13 @@ void Graph::printRank () {
   }
 }
 
+//size of graph
 int Graph::size () {
   return vertices.size();
 }
 
+
+//returns number of edges
 int Graph::edgeCount () {
   int total = 0;
   std::vector<GraphNode*>::const_iterator it;
@@ -271,6 +311,8 @@ void Graph::pagerank (double alpha, double epsilon, int maxIterations) {
   std::cout << "Edges touched: " << edgeTouchCount << std::endl;
 }
 
+
+//prints a list of ints (for debug)
 void printList (std::list<int> ll) {
   std::list<int>::const_iterator it;
   for (it = ll.begin(); it != ll.end(); it++) {
@@ -278,6 +320,8 @@ void printList (std::list<int> ll) {
   }
 }
 
+
+//prints a list of graphnodes
 void printVec (std::vector<GraphNode> ll) {
   std::vector<GraphNode>::const_iterator it;
   for (it = ll.begin(); it != ll.end(); it++) {
@@ -285,6 +329,8 @@ void printVec (std::vector<GraphNode> ll) {
   }
 }
 
+
+//reads a graph in from file
 void readGraphEdges (Graph g, std::string filename) {
   std::ifstream infile(filename);
   int from, to;
