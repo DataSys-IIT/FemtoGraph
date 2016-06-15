@@ -226,6 +226,7 @@ void Graph::start() {
     for(int x=0;x<vertices.size();x++) {
       vertices[x]->compute(messagequeue.at(x));
     }
+    superstepcount++;
   }
 }
 
