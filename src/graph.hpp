@@ -9,7 +9,7 @@
 #include <sys/time.h>
 #include <queue>
 #include <iostream>
-
+#include <thread>
 //enables some expensive validation and error checking
 #define ECC 1
 
@@ -56,12 +56,13 @@ public:
   void printRank();
   int size();
   int edgeCount();
-  void pagerank (double alpha, double epsilon, int maxIterations);
   int superstep();
   void start();
   bool isDone();
+  void threadMain(int start, int end, int id);
 private:
   int superstepcount;
+  int numThreads;
   
 };
 
@@ -222,6 +223,32 @@ void Graph::start() {
     #if ECC
   if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
   #endif
+std::vector<std::thread*> threads;
+ int start = 0;
+ int end = ceil(size()/ numThreads);
+  for (int i = 0; i < numThreads; i++) {
+    if(end+(ceil(size() / numThreads)) < size()) {
+      start = end;
+      end += (ceil(size() / numThreads));
+    }
+    else {
+      start = end;
+      end = size();
+    }
+    threads.push_back(new std::thread(&Graph::threadMain, this,start, end , i ));
+  }
+  for (int i = 0; i < numThreads; i++) {
+    threads[i]->join();
+  }
+
+  for(int i=0;i<numThreads;i++) {
+    delete threads[i];
+  }
+  
+}
+
+
+void Graph::threadMain(int start, int end, int id) {
   while(!isDone()) {
     for(int x=0;x<vertices.size();x++) {
       vertices[x]->compute(messagequeue.at(x));
