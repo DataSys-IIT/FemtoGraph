@@ -242,7 +242,7 @@ void Graph::start(int threads) {
 
 void Graph::threadMain(int start, int end, int id) {
   
-    for(int x=0;x<vertices.size();x++) {
+    for(int x=start;x<end;x++) {
       vertices[x]->compute(messagequeue.listAt(x));
     }
 }
