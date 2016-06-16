@@ -62,10 +62,12 @@ std::vector<T> *  adjlist<T>::listAt(int vertex) {
 
 template <class T>
 void adjlist<T>::addRows(int num) {
+  global_mutex.lock();
   for(int x=0;x<num;x++) {
     std::vector<T> * row = new std::vector<T>();
     list.push_back(row);
   }
+  global_mutex.unlock();
 }
 
 template <class T>
