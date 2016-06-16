@@ -333,6 +333,7 @@ void readGraphEdges (Graph g, std::string filename) {
 // expects to/from edge pairs
 // id starts at 1
 void readGraph (Graph& g, std::string filename) {
+  std::cout << "Reading in graph\n";
   std::ifstream infile(filename);
   int id, to, from, maxId = 0;
   int minId = std::numeric_limits<int>::max();
@@ -348,6 +349,7 @@ void readGraph (Graph& g, std::string filename) {
   infile.clear();
   infile.seekg(0, std::ios::beg);
   while (infile >> from >> std::skipws >> to) {
-    g.addEdge(from-1, to-1);
+    //std::cout << "Adding edge " << from << "=>" << to << "\n"; 
+    g.addEdge(from, to);
   }
 }

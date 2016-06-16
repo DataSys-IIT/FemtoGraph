@@ -154,10 +154,12 @@ void readGraphEdges (Graph g, std::string filename) {
 // expects to/from edge pairs
 // id starts at 1
 void readGraph (Graph& g, std::string filename) {
+  std::cout << "Reading in graph\n";
   std::ifstream infile(filename);
   int id, to, from, maxId = 0;
   int minId = std::numeric_limits<int>::max();
   while (infile >> id) {
+    std::cout << "id: " << id << "\n";
     maxId = std::max(id-1, maxId);
     minId = std::min(id-1, minId);
   }
