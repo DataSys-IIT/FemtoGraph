@@ -265,7 +265,7 @@ void readGraph (Graph& g, std::string filename) {
   }
   for (int i = minId; i <= maxId; i++) {
     // all same starting weight
-    g.addVertex(1);
+    g.addVertex(1/maxId);
   }
   // return to beginning of file
   infile.clear();
