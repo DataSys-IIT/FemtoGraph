@@ -12,7 +12,7 @@
 #include <thread>
 #include "adjlist.hpp"
 //enables some expensive validation and error checking
-#define ECC 1
+#define ECC 0
 
 //TODO Add deconstructors - NEED TO CLEANUP
 
