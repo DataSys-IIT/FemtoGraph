@@ -58,7 +58,7 @@ public:
   int size();
   int edgeCount();
   int superstep();
-  void start();
+  void start(int threads);
   bool isDone();
   void threadMain(int start, int end, int id);
 private:
@@ -208,42 +208,43 @@ bool Graph::isDone() {
   return result;
 }
 
-void Graph::start() {
+void Graph::start(int threads) {
     #if ECC
   if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
   #endif
-std::vector<std::thread*> threads;
- int start = 0;
- int end = ceil(size()/ numThreads);
-  for (int i = 0; i < numThreads; i++) {
-    if(end+(ceil(size() / numThreads)) < size()) {
-      start = end;
-      end += (ceil(size() / numThreads));
+  numThreads = threads;
+  while(!isDone()) {
+    std::vector<std::thread*> threads;
+    int start = 0;
+    int end = ceil(size()/ numThreads);
+    for (int i = 0; i < numThreads; i++) {
+      if(end+(ceil(size() / numThreads)) < size()) {
+	start = end;
+	end += (ceil(size() / numThreads));
+      }
+      else {
+	start = end;
+	end = size();
+      }
+      threads.push_back(new std::thread(&Graph::threadMain, this,start, end , i ));
     }
-    else {
-      start = end;
-      end = size();
+    for (int i = 0; i < numThreads; i++) {
+      threads[i]->join();
     }
-    threads.push_back(new std::thread(&Graph::threadMain, this,start, end , i ));
-  }
-  for (int i = 0; i < numThreads; i++) {
-    threads[i]->join();
-  }
 
-  for(int i=0;i<numThreads;i++) {
-    delete threads[i];
+    for(int i=0;i<numThreads;i++) {
+      delete threads[i];
+    }
   }
   
 }
 
 
 void Graph::threadMain(int start, int end, int id) {
-  while(!isDone()) {
+  
     for(int x=0;x<vertices.size();x++) {
       vertices[x]->compute(messagequeue.listAt(x));
     }
-    superstepcount++;
-  }
 }
 
 

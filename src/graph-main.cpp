@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
   Graph g;
   readGraph(g, argv[1]);
   std::cout << "Starting pagerank" << "\n";
-  g.start();
+  g.start(4);
   g.print();
   g.printRank();
 }
