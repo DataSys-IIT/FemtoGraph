@@ -10,6 +10,7 @@
 #include <queue>
 #include <iostream>
 #include <thread>
+#include "adjlist.hpp"
 //enables some expensive validation and error checking
 #define ECC 1
 
@@ -49,7 +50,7 @@ public:
   Graph();
   ~Graph();
   std::vector<GraphNode*> vertices;
-  std::vector<std::vector<message*>*>  messagequeue;
+  adjlist<message*>  messagequeue;
   void addVertex(int weight);
   void addEdge (int from, int to);
   void print();
@@ -70,7 +71,7 @@ private:
 /* represents a vertex in the graph */ 
 class GraphNode {
 public:
-  GraphNode(int weight, std::vector<std::vector<message*>*> &  messagequeue,  Graph * graph, int id) {
+  GraphNode(int weight, adjlist<message*> &  messagequeue,  Graph * graph, int id) {
     data = new GraphNodeData(weight);
     this->messagequeue = &messagequeue;
     this->id = id;
@@ -99,7 +100,7 @@ public:
   bool isHalted;
   Graph * graph;
 private:
-  std::vector<std::vector<message*>*> * messagequeue;
+  adjlist<message*> * messagequeue;
 };
 
 
@@ -115,8 +116,7 @@ void GraphNode::sendMessageToNodes(std::vector<int> nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
     message *  m = new message(nodes[x], msg);
     int nodeid = graph->vertices[nodes[x]]->id;
-    std::vector<message*> * messagetmp = messagequeue->at(nodeid);
-    (*messagetmp).push_back(m);
+    messagequeue->pushToList(nodeid, m);
   }
 }
 
@@ -182,14 +182,6 @@ Graph::~Graph () {
     delete (*nodePtrIter);
   }
 
-  std::vector<std::vector<message*>*>::const_iterator row;
-  std::vector<message*>::const_iterator col;
-  for(row = messagequeue.begin() ;row != messagequeue.end() ; ++row) {
-    for(col = (*row)->begin(); col != (*row)->end(); ++col) {
-      delete *col;
-    }
-    delete *row;;
-  }
   vertices.clear();
   
 }
@@ -198,10 +190,7 @@ Graph::~Graph () {
 //constructor for graph
 Graph::Graph() {
   superstepcount = 0;
-  for(int x=0;x<vertices.size();x++) {
-    std::vector<message*> * nodequeue = new std::vector<message*>();
-    messagequeue.push_back(nodequeue);
-  }
+  messagequeue.addRows(vertices.size());
 }
 
 
@@ -251,7 +240,7 @@ std::vector<std::thread*> threads;
 void Graph::threadMain(int start, int end, int id) {
   while(!isDone()) {
     for(int x=0;x<vertices.size();x++) {
-      vertices[x]->compute(messagequeue.at(x));
+      vertices[x]->compute(messagequeue.listAt(x));
     }
     superstepcount++;
   }
@@ -274,7 +263,7 @@ void Graph::addVertex (int weight) {
   //vertices.push_back(new GraphNode(weight));
   vertices.push_back(new GraphNode(weight,messagequeue, this, vertices.size()));
   std::vector<message*> * nodequeue = new std::vector<message*>();
-  messagequeue.push_back(nodequeue);
+  messagequeue.push(nodequeue);
 
 }
 
