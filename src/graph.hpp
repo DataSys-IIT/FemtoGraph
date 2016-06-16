@@ -60,7 +60,7 @@ public:
   int superstep();
   void start(int threads);
   bool isDone();
-  void threadMain(int start, int end, int id);
+  void threadMain(int id);
 private:
   int superstepcount;
   int numThreads;
@@ -215,18 +215,9 @@ void Graph::start(int threads) {
   numThreads = threads;
   while(!isDone()) {
     std::vector<std::thread*> threads;
-    int start = 0;
-    int end = ceil(size()/ numThreads);
+    std::cout << "SUPERSTEP " << superstepcount << "\n";
     for (int i = 0; i < numThreads; i++) {
-      if(end+(ceil(size() / numThreads)) < size()) {
-	start = end;
-	end += (ceil(size() / numThreads));
-      }
-      else {
-	start = end;
-	end = size();
-      }
-      threads.push_back(new std::thread(&Graph::threadMain, this,start, end , i ));
+      threads.push_back(new std::thread(&Graph::threadMain, this, i ));
     }
     for (int i = 0; i < numThreads; i++) {
       threads[i]->join();
@@ -235,16 +226,17 @@ void Graph::start(int threads) {
     for(int i=0;i<numThreads;i++) {
       delete threads[i];
     }
+    superstepcount++;
   }
   
 }
 
 
-void Graph::threadMain(int start, int end, int id) {
-  
-    for(int x=start;x<end;x++) {
-      vertices[x]->compute(messagequeue.listAt(x));
-    }
+void Graph::threadMain(int id) {
+  std::cout << "started thread id: "<<id << "\n";
+  for(int x=id;x<messagequeue.size();x = x + numThreads) {
+    vertices[x]->compute(messagequeue.listAt(x));
+  }
 }
 
 
