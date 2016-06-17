@@ -11,6 +11,8 @@
 #include <iostream>
 #include <thread>
 #include "adjlist.hpp"
+#include <time.h>
+
 //enables some expensive validation and error checking
 #define ECC 0
 
@@ -212,6 +214,7 @@ void Graph::start(int threads) {
     #if ECC
   if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
   #endif
+  clock_t startTime = clock();
   numThreads = threads;
   while(!isDone()) {
     std::vector<std::thread*> threads;
@@ -228,6 +231,9 @@ void Graph::start(int threads) {
     }
     superstepcount++;
   }
+
+  double result = (double) (clock() - startTime)/ CLOCKS_PER_SEC;
+  std::cout << "Finished in " << result <<  " seconds\n";
   
 }
 
