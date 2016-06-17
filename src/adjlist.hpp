@@ -54,9 +54,9 @@ void adjlist<T>::push(std::vector<T> * val) {
 
 template <class T>
 std::vector<T> *  adjlist<T>::listAt(int vertex) {
-  global_mutex.lock();
+  //global_mutex.lock();
   std::vector<T> * vec = list.at(vertex);
-  global_mutex.unlock();
+  //.global_mutex.unlock();
   return  vec;
 }
 
