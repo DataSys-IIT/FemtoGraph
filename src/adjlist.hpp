@@ -1,6 +1,6 @@
 #include <vector>
 #include <mutex>
-
+#include <thread>
 
 
 #ifndef __queue_H_INCLUDED__
@@ -54,9 +54,9 @@ void adjlist<T>::push(std::vector<T> * val) {
 
 template <class T>
 std::vector<T> *  adjlist<T>::listAt(int vertex) {
-  //global_mutex.lock();
+  global_mutex.lock();
   std::vector<T> * vec = list.at(vertex);
-  //.global_mutex.unlock();
+  global_mutex.unlock();
   return  vec;
 }
 
@@ -72,8 +72,8 @@ void adjlist<T>::addRows(int num) {
 
 template <class T>
 void adjlist<T>::pushToList(int node, T val)  {
-  global_mutex.lock();
   std::vector<T> * messagetmp = list.at(node);
+  global_mutex.lock();
   (*messagetmp).push_back(val);
   global_mutex.unlock();
 }
