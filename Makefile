@@ -1,5 +1,5 @@
 CPP=g++
-CPPFLAGS=-std=c++11 -g -lpthread
+CPPFLAGS=-lpthread -pthread -std=c++11 -Wl,--no-as-needed -g 
 
 all: graph hmgraph mtgraph
 
@@ -7,7 +7,7 @@ hmgraph: src/hmgraph.hpp
 	$(CPP) $(CPPFLAGS) src/hmgraph.hpp src/hmgraph-main.cpp -o bin/hmgraph
 
 graph: src/graph.hpp
-	$(CPP) $(CPPFLAGS) src/graph.hpp src/graph-main.cpp -o bin/graph
+	$(CPP) src/graph.hpp src/graph-main.cpp  -o bin/graph  $(CPPFLAGS)
 
 mtgraph:  src/mtgraph.o src/queue.o src/mtmain.o
 	$(CPP) $(CPPFLAGS) src/mtmain.cpp src/mtgraph.hpp src/queue.hpp  -o bin/mtgraph
