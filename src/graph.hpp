@@ -12,7 +12,7 @@
 #include <thread>
 #include "adjlist.hpp"
 #include <chrono>
-
+#include <boost/lockfree/queue.hpp>
 //enables some expensive validation and error checking
 #define ECC 0
 
@@ -52,7 +52,7 @@ public:
   Graph();
   ~Graph();
   std::vector<GraphNode*> vertices;
-  adjlist<message*>  messagequeue;
+  std::vector<boost::lockfree::queue<message*>*>  messagequeue;
   void addVertex(int weight);
   void addEdge (int from, int to);
   void print();
@@ -73,7 +73,7 @@ private:
 /* represents a vertex in the graph */ 
 class GraphNode {
 public:
-  GraphNode(int weight, adjlist<message*> &  messagequeue,  Graph * graph, int id) {
+  GraphNode(int weight, std::vector<boost::lockfree::queue<message*>*> &  messagequeue,  Graph * graph, int id) {
     data = new GraphNodeData(weight);
     this->messagequeue = &messagequeue;
     this->id = id;
@@ -90,7 +90,7 @@ public:
     }
   }
   ~GraphNode();
-  void compute(const std::vector<message*> *  messages);
+  void compute(const std::vector<message*>  messages);
   void sendMessageToNodes(std::vector<int> nodes, double msg);
   std::vector<int> neighbors;
   std::vector<int> inEdges;
@@ -102,7 +102,7 @@ public:
   bool isHalted;
   Graph * graph;
 private:
-  adjlist<message*> * messagequeue;
+  std::vector<boost::lockfree::queue<message*>*> * messagequeue;
 };
 
 
@@ -117,8 +117,7 @@ void printVec (std::vector<GraphNode> ll);
 void GraphNode::sendMessageToNodes(std::vector<int> nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
     message *  m = new message(nodes[x], msg);
-    int nodeid = graph->vertices[nodes[x]]->id;
-    messagequeue->pushToList(nodeid, m);
+    messagequeue->at(nodes[x])->push(m);
   }
 }
 
@@ -144,14 +143,11 @@ GraphNode::~GraphNode () {
  * Pregel 'update' function. Called virtually in parallel from 
  * the context of each vertex. 
  */  
-void GraphNode::compute(const std::vector<message*> *  messages) {
-    #if ECC
-  if(messagequeue->size() != graph->vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
-  #endif
+void GraphNode::compute(const std::vector<message*>  messages) { 
   if(graph->superstep() >= 1) {
     double sum = 0;
-    for(int x=0;x<messages->size();x++) {
-      sum += (*messages)[x]->data;
+    for(int x=0;x<messages.size();x++) {
+      sum += messages[x]->data;
     }
     this->data->weight = 0.15 / graph->size() + 0.85 * sum;
   }
@@ -192,15 +188,14 @@ Graph::~Graph () {
 //constructor for graph
 Graph::Graph() {
   superstepcount = 0;
-  messagequeue.addRows(vertices.size());
+  for(int x=0;x<vertices.size();x++) {
+    messagequeue.push_back(new boost::lockfree::queue<message*>(0));
+  }
 }
 
 
 //is every vertex halted?
 bool Graph::isDone() {
-  #if ECC
-  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
-  #endif
   bool result = true;
   for(int i=0;i<vertices.size();i++) {
     if(vertices[i]->isHalted == false)
@@ -211,10 +206,6 @@ bool Graph::isDone() {
 }
 
 void Graph::start(int threads) {
-    #if ECC
-  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
-  #endif
-
   using std::chrono::duration_cast;
   using std::chrono::nanoseconds;
 
@@ -247,8 +238,13 @@ void Graph::start(int threads) {
 
 void Graph::threadMain(int id) {
   std::cout << "started thread id: "<<id << "\n";
+  std::vector<message*> data;
   for(int x=id;x<messagequeue.size();x = x + numThreads) {
-    vertices[x]->compute(messagequeue.listAt(x));
+    message * m;
+    while(messagequeue[x]->pop(m)) {
+      data.push_back(m);
+    }
+    vertices[x]->compute(data);
   }
 }
 
@@ -262,14 +258,11 @@ int Graph::superstep() {
 
 //adds a vertex to the graph
 void Graph::addVertex (int weight) {
-    #if ECC
-  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
-  #endif
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
   vertices.push_back(new GraphNode(weight,messagequeue, this, vertices.size()));
-  std::vector<message*> * nodequeue = new std::vector<message*>();
-  messagequeue.push(nodequeue);
+  boost::lockfree::queue<message*> * nodequeue = new boost::lockfree::queue<message*>(0);
+  messagequeue.push_back(nodequeue);
 
 }
 
