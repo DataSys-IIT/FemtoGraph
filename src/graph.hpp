@@ -36,7 +36,6 @@ public:
   GraphNodeData(int weight) {
     this->weight = weight;
   }
-
 };
 
 
@@ -52,7 +51,7 @@ public:
   Graph();
   ~Graph();
   std::vector<GraphNode*> vertices;
-  std::vector<boost::lockfree::queue<message*>*>  messagequeue;
+  boost::lockfree::queue<message*>  * messagequeue;
   void addVertex(int weight);
   void addEdge (int from, int to);
   void print();
@@ -66,14 +65,13 @@ public:
 private:
   int superstepcount;
   int numThreads;
-  
 };
 
 
 /* represents a vertex in the graph */ 
 class GraphNode {
 public:
-  GraphNode(int weight, std::vector<boost::lockfree::queue<message*>*> &  messagequeue,  Graph * graph, int id) {
+  GraphNode(int weight, boost::lockfree::queue<message*> &  messagequeue,  Graph * graph, int id) {
     data = new GraphNodeData(weight);
     this->messagequeue = &messagequeue;
     this->id = id;
@@ -102,7 +100,7 @@ public:
   bool isHalted;
   Graph * graph;
 private:
-  std::vector<boost::lockfree::queue<message*>*> * messagequeue;
+  boost::lockfree::queue<message*> * messagequeue;
 };
 
 
@@ -116,8 +114,9 @@ void printVec (std::vector<GraphNode> ll);
 /* appends a message to the message queue for the next iteration */ 
 void GraphNode::sendMessageToNodes(std::vector<int> nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
-    message *  m = new message(nodes[x], msg);
-    messagequeue->at(nodes[x])->push(m);
+    int nodeid = graph->vertices[nodes[x]]->id;
+    message *  m = new message(nodeid, msg);
+    messagequeue->push(m);
   }
 }
 
@@ -188,9 +187,7 @@ Graph::~Graph () {
 //constructor for graph
 Graph::Graph() {
   superstepcount = 0;
-  for(int x=0;x<vertices.size();x++) {
-    messagequeue.push_back(new boost::lockfree::queue<message*>(0));
-  }
+  messagequeue =  new boost::lockfree::queue<message*>(0);
 }
 
 
@@ -235,16 +232,18 @@ void Graph::start(int threads) {
   
 }
 
-
 void Graph::threadMain(int id) {
+  #if ECC
+  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
+  #endif
   std::cout << "started thread id: "<<id << "\n";
-  std::vector<message*> data;
-  for(int x=id;x<messagequeue.size();x = x + numThreads) {
-    message * m;
-    while(messagequeue[x]->pop(m)) {
-      data.push_back(m);
-    }
-    vertices[x]->compute(data);
+  std::vector<message*> data[vertices.size()];
+  message * m;
+  while(messagequeue->pop(m)) {
+    data[m->to].push_back(m);
+  }
+  for(int x=id;x<vertices.size();x = x + numThreads) {
+    vertices[x]->compute(data[x]);
   }
 }
 
@@ -260,9 +259,8 @@ int Graph::superstep() {
 void Graph::addVertex (int weight) {
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
-  vertices.push_back(new GraphNode(weight,messagequeue, this, vertices.size()));
-  boost::lockfree::queue<message*> * nodequeue = new boost::lockfree::queue<message*>(0);
-  messagequeue.push_back(nodequeue);
+  vertices.push_back(new GraphNode(weight,*messagequeue, this, vertices.size()));
+ 
 
 }
 
