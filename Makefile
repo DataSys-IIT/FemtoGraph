@@ -1,5 +1,5 @@
 CPP=g++
-CPPFLAGS=-std=c++11 -g -lpthread
+CPPFLAGS=-std=c++11 -g -lpthread -pthread
 
 all: graph hmgraph mtgraph
 
