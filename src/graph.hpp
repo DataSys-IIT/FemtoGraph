@@ -214,7 +214,12 @@ void Graph::start(int threads) {
     #if ECC
   if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
   #endif
-  clock_t startTime = clock();
+  using std::chrono::duration_cast;
+  using std::chrono::nanoseconds;
+
+  typedef std::chrono::high_resolution_clock clock;
+  auto start = clock::now();
+
   numThreads = threads;
   while(!isDone()) {
     std::vector<std::thread*> threads;
@@ -232,8 +237,9 @@ void Graph::start(int threads) {
     superstepcount++;
   }
 
-  double result = (double) (clock() - startTime)/ CLOCKS_PER_SEC;
-  std::cout << "Finished in " << result <<  " seconds\n";
+  auto end = clock::now();
+
+  std::cout << "Finished in " << (double)(end-start).count()/1000000000.00 <<  " sec\n";
   
 }
 
