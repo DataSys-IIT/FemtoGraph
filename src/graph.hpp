@@ -62,11 +62,12 @@ public:
   int superstep();
   void start(int threads);
   bool isDone();
+  bool isDoneWithSuperstep();
   void threadMain(int id);
 private:
   int superstepcount;
   int numThreads;
-  
+  bool * doneWithSuperstep;
 };
 
 
@@ -196,6 +197,15 @@ Graph::Graph() {
 }
 
 
+bool Graph::isDoneWithSuperstep() {
+  for(int x=0;x<numThreads;x++) {
+    if(doneWithSuperstep[x] == false)
+      return false;
+  }
+  return true;
+}
+
+
 //is every vertex halted?
 bool Graph::isDone() {
   #if ECC
@@ -210,7 +220,7 @@ bool Graph::isDone() {
   return result;
 }
 
-void Graph::start(int threads) {
+void Graph::start(int numthreads) {
     #if ECC
   if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
   #endif
@@ -220,10 +230,14 @@ void Graph::start(int threads) {
   typedef std::chrono::high_resolution_clock clock;
   auto start = clock::now();
 
-  numThreads = threads;
-  while(!isDone()) {
-    std::vector<std::thread*> threads;
-    std::cout << "SUPERSTEP " << superstepcount << "\n";
+  numThreads = numthreads;
+  doneWithSuperstep = new bool [numThreads];
+  
+  for(int x=0;x<numThreads;x++) {
+    doneWithSuperstep[x] = false;
+  }
+  std::vector<std::thread*> threads;
+    
     for (int i = 0; i < numThreads; i++) {
       threads.push_back(new std::thread(&Graph::threadMain, this, i ));
     }
@@ -234,8 +248,6 @@ void Graph::start(int threads) {
     for(int i=0;i<numThreads;i++) {
       delete threads[i];
     }
-    superstepcount++;
-  }
 
   auto end = clock::now();
 
@@ -246,8 +258,20 @@ void Graph::start(int threads) {
 
 void Graph::threadMain(int id) {
   std::cout << "started thread id: "<<id << "\n";
-  for(int x=id;x<messagequeue.size();x = x + numThreads) {
-    vertices[x]->compute(messagequeue.listAt(x));
+  
+  while(!isDone()) {
+    if(id == 0)
+      std::cout << "SUPERSTEP " << superstepcount << "\n";
+    doneWithSuperstep[id] = false;
+    for(int x=id;x<messagequeue.size();x = x + numThreads) {
+      vertices[x]->compute(messagequeue.listAt(x));
+    }
+    doneWithSuperstep[id] = true;
+    while(!isDoneWithSuperstep()){
+
+    }
+    if(id==0) 
+      superstepcount++;
   }
 }
 
