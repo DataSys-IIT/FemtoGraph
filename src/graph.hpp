@@ -116,8 +116,7 @@ void printVec (std::vector<GraphNode> ll);
 /* appends a message to the message queue for the next iteration */ 
 void GraphNode::sendMessageToNodes(std::vector<int> nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
-    int nodeid = graph->vertices[nodes[x]]->id;
-    message *  m = new message(nodeid, msg);
+    message *  m = new message(nodes[x], msg);
     messagequeue->push(m);
   }
 }
