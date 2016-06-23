@@ -1,10 +1,18 @@
 #include <vector>
 #include <mutex>
 #include <thread>
-
+#include <boost/lockfree/queue.hpp>
 
 #ifndef __queue_H_INCLUDED__
 #define __queue_H_INCLUDED__
+
+/* represents a messaqge for the pregel message queue */
+class message {
+public:
+  message(int to, double data);
+  double data;
+  int to;
+};
 
 
 template<class T> class adjlist {
@@ -16,14 +24,14 @@ public:
   void unpause();
   int size();
   void addRows(int num);
-  std::vector<T> * listAt(int vertex);
+  boost::lockfree::queue<message*> * listAt(int vertex);
   T begin();
   T end();
-  void push(std::vector<T> * val);
+  void push(boost::lockfree::queue<message*> * val);
   void pushToList(int node, T val);
   
 private:
-  std::vector<std::vector<T>*>  list;
+  std::vector<boost::lockfree::queue<message*>*>  list;
   std::mutex global_mutex;
 };
 
@@ -46,17 +54,15 @@ adjlist<T>::~adjlist() {
 
 
 template <class T>
-void adjlist<T>::push(std::vector<T> * val) {
+void adjlist<T>::push(boost::lockfree::queue<message*> * val) {
   global_mutex.lock();
   list.push_back(val);
   global_mutex.unlock();
 }
 
 template <class T>
-std::vector<T> *  adjlist<T>::listAt(int vertex) {
-  global_mutex.lock();
-  std::vector<T> * vec = list.at(vertex);
-  global_mutex.unlock();
+boost::lockfree::queue<message*> *  adjlist<T>::listAt(int vertex) {
+  boost::lockfree::queue<message*> * vec = list.at(vertex);
   return  vec;
 }
 
@@ -64,7 +70,7 @@ template <class T>
 void adjlist<T>::addRows(int num) {
   global_mutex.lock();
   for(int x=0;x<num;x++) {
-    std::vector<T> * row = new std::vector<T>();
+    boost::lockfree::queue<message*> * row = new boost::lockfree::queue<message*>(0);
     list.push_back(row);
   }
   global_mutex.unlock();
@@ -72,10 +78,8 @@ void adjlist<T>::addRows(int num) {
 
 template <class T>
 void adjlist<T>::pushToList(int node, T val)  {
-  std::vector<T> * messagetmp = list.at(node);
-  global_mutex.lock();
-  (*messagetmp).push_back(val);
-  global_mutex.unlock();
+  boost::lockfree::queue<message*> * messagetmp = list.at(node);
+  (*messagetmp).push(val);
 }
 
 

@@ -19,13 +19,6 @@
 //TODO Add deconstructors - NEED TO CLEANUP
 
 
-/* represents a messaqge for the pregel message queue */
-class message {
-public:
-  message(int to, double data);
-  double data;
-  int to;
-};
 
 
 
@@ -51,7 +44,7 @@ public:
   Graph();
   ~Graph();
   std::vector<GraphNode*> vertices;
-  boost::lockfree::queue<message*>  * messagequeue;
+  adjlist<message*> * messagequeue;
   void addVertex(int weight);
   void addEdge (int from, int to);
   void print();
@@ -73,7 +66,7 @@ private:
 /* represents a vertex in the graph */ 
 class GraphNode {
 public:
-  GraphNode(int weight, boost::lockfree::queue<message*> &  messagequeue,  Graph * graph, int id) {
+  GraphNode(int weight, adjlist<message*> &  messagequeue,  Graph * graph, int id) {
     data = new GraphNodeData(weight);
     this->messagequeue = &messagequeue;
     this->id = id;
@@ -90,7 +83,7 @@ public:
     }
   }
   ~GraphNode();
-  void compute(const std::vector<message*>  messages);
+  void compute(boost::lockfree::queue<message*> *  messages);
   void sendMessageToNodes(std::vector<int> nodes, double msg);
   std::vector<int> neighbors;
   std::vector<int> inEdges;
@@ -102,7 +95,7 @@ public:
   bool isHalted;
   Graph * graph;
 private:
-  boost::lockfree::queue<message*> * messagequeue;
+  adjlist<message*> * messagequeue;
 };
 
 
@@ -117,7 +110,7 @@ void printVec (std::vector<GraphNode> ll);
 void GraphNode::sendMessageToNodes(std::vector<int> nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
     message *  m = new message(nodes[x], msg);
-    messagequeue->push(m);
+    messagequeue->listAt(nodes[x])->push(m);
   }
 }
 
@@ -143,11 +136,12 @@ GraphNode::~GraphNode () {
  * Pregel 'update' function. Called virtually in parallel from 
  * the context of each vertex. 
  */  
-void GraphNode::compute(const std::vector<message*>  messages) { 
+void GraphNode::compute(boost::lockfree::queue<message*> *  messages) { 
   if(graph->superstep() >= 1) {
     double sum = 0;
-    for(int x=0;x<messages.size();x++) {
-      sum += messages[x]->data;
+    message * m;
+    while (messages->pop(m)) {
+      sum += m->data;
     }
     this->data->weight = 0.15 / graph->size() + 0.85 * sum;
   }
@@ -188,7 +182,8 @@ Graph::~Graph () {
 //constructor for graph
 Graph::Graph() {
   superstepcount = 0;
-  messagequeue =  new boost::lockfree::queue<message*>(0);
+  messagequeue =  new adjlist<message*>();
+  messagequeue->addRows(vertices.size());
 }
 
 
@@ -218,7 +213,7 @@ void Graph::start(int numthreads) {
   using std::chrono::nanoseconds;
 
   typedef std::chrono::high_resolution_clock clock;
-  auto start = clock::now();
+  auto start = clock::now();
   numThreads = numthreads;
   doneWithSuperstep = new bool [numThreads];
   
@@ -244,21 +239,13 @@ void Graph::start(int numthreads) {
 }
 
 void Graph::threadMain(int id) {
-  #if ECC
-  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
-  #endif
   std::cout << "started thread id: "<<id << "\n";
   while(!isDone()) {
     if(id == 0)
       std::cout << "SUPERSTEP " << superstepcount << "\n";
     doneWithSuperstep[id] = false;
-    std::vector<message*> data[vertices.size()];
-    message * m;
-    while(messagequeue->pop(m)) {
-    data[m->to].push_back(m);
-  }
     for(int x=id;x<vertices.size();x = x + numThreads) {
-      vertices[x]->compute(data[x]);
+      vertices[x]->compute(messagequeue->listAt(x));
     }
     doneWithSuperstep[id] = true;
     while(!isDoneWithSuperstep()){
@@ -283,6 +270,7 @@ void Graph::addVertex (int weight) {
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
   vertices.push_back(new GraphNode(weight,*messagequeue, this, vertices.size()));
+  messagequeue->addRows(1);
  
 
 }
@@ -290,9 +278,6 @@ void Graph::addVertex (int weight) {
 
 //adds an edge to the graph
 void Graph::addEdge (int from, int to) {
-    #if ECC
-  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
-  #endif
   vertices[from]->neighbors.push_back(to);
   vertices[to]->inEdges.push_back(from);
 }
@@ -300,9 +285,6 @@ void Graph::addEdge (int from, int to) {
 
 //prints out current graph
 void Graph::print () {
-    #if ECC
-  if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
-  #endif
   std::vector<int>::const_iterator it;
   for (int i = 0; i < vertices.size(); i++) {
     std::cout << i << "-> ";
