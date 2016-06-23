@@ -258,7 +258,7 @@ void Graph::threadMain(int id) {
     while(messagequeue->pop(m)) {
     data[m->to].push_back(m);
   }
-    for(int x=id;x<messagequeue.size();x = x + numThreads) {
+    for(int x=id;x<vertices.size();x = x + numThreads) {
       vertices[x]->compute(data[x]);
     }
     doneWithSuperstep[id] = true;
