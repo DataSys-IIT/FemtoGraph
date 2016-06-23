@@ -61,10 +61,12 @@ public:
   int superstep();
   void start(int threads);
   bool isDone();
+  bool isDoneWithSuperstep();
   void threadMain(int id);
 private:
   int superstepcount;
   int numThreads;
+  bool * doneWithSuperstep;
 };
 
 
@@ -191,6 +193,15 @@ Graph::Graph() {
 }
 
 
+bool Graph::isDoneWithSuperstep() {
+  for(int x=0;x<numThreads;x++) {
+    if(doneWithSuperstep[x] == false)
+      return false;
+  }
+  return true;
+}
+
+
 //is every vertex halted?
 bool Graph::isDone() {
   bool result = true;
@@ -202,17 +213,21 @@ bool Graph::isDone() {
   return result;
 }
 
-void Graph::start(int threads) {
+void Graph::start(int numthreads) {
+  
   using std::chrono::duration_cast;
   using std::chrono::nanoseconds;
 
   typedef std::chrono::high_resolution_clock clock;
-  auto start = clock::now();
+  auto start = clock::now();
+  numThreads = numthreads;
+  doneWithSuperstep = new bool [numThreads];
   
-  numThreads = threads;
-  while(!isDone()) {
-    std::vector<std::thread*> threads;
-    std::cout << "SUPERSTEP " << superstepcount << "\n";
+  for(int x=0;x<numThreads;x++) {
+    doneWithSuperstep[x] = false;
+  }
+  std::vector<std::thread*> threads;
+    
     for (int i = 0; i < numThreads; i++) {
       threads.push_back(new std::thread(&Graph::threadMain, this, i ));
     }
@@ -223,11 +238,8 @@ void Graph::start(int threads) {
     for(int i=0;i<numThreads;i++) {
       delete threads[i];
     }
-    superstepcount++;
-  }
 
   auto end = clock::now();
-  
   std::cout << "Finished in " << (double)(end-start).count()/1000000000.00 <<  " sec\n";
   
 }
@@ -237,13 +249,25 @@ void Graph::threadMain(int id) {
   if(messagequeue.size() != vertices.size()) {std::cout<<"BLARG"<<"\n"; exit(2);}
   #endif
   std::cout << "started thread id: "<<id << "\n";
-  std::vector<message*> data[vertices.size()];
-  message * m;
-  while(messagequeue->pop(m)) {
+  while(!isDone()) {
+    if(id == 0)
+      std::cout << "SUPERSTEP " << superstepcount << "\n";
+    doneWithSuperstep[id] = false;
+    std::vector<message*> data[vertices.size()];
+    message * m;
+    while(messagequeue->pop(m)) {
     data[m->to].push_back(m);
   }
-  for(int x=id;x<vertices.size();x = x + numThreads) {
-    vertices[x]->compute(data[x]);
+    for(int x=id;x<messagequeue.size();x = x + numThreads) {
+      vertices[x]->compute(data[x]);
+    }
+    doneWithSuperstep[id] = true;
+    while(!isDoneWithSuperstep()){
+
+    }
+    if(id==0) 
+      superstepcount++;
+
   }
 }
 
