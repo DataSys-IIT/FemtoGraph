@@ -232,7 +232,9 @@ void Graph::threadMain(int id) {
   while(!isDone()) {
     if(id == 0)
       std::cout << "SUPERSTEP " << superstepcount << "\n";
-    for(int x=id;x<vertices.size();x = x + numThreads) {
+
+    int start = floor(vertices.size()/numThreads) * id;
+    for(int x=start;x<start + floor(vertices.size()/numThreads);x = x +1) {
       vertices[x]->compute(messagequeue->listAt(x));
     }
 
