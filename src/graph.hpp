@@ -13,6 +13,8 @@
 #include "adjlist.hpp"
 #include <chrono>
 #include <boost/lockfree/queue.hpp>
+#include <atomic>
+#include <boost/thread/barrier.hpp>
 //enables some expensive validation and error checking
 #define ECC 0
 
@@ -54,12 +56,11 @@ public:
   int superstep();
   void start(int threads);
   bool isDone();
-  bool isDoneWithSuperstep();
   void threadMain(int id);
 private:
+  boost::barrier * bar;
   int superstepcount;
   int numThreads;
-  bool * doneWithSuperstep;
 };
 
 
@@ -187,15 +188,6 @@ Graph::Graph() {
 }
 
 
-bool Graph::isDoneWithSuperstep() {
-  for(int x=0;x<numThreads;x++) {
-    if(doneWithSuperstep[x] == false)
-      return false;
-  }
-  return true;
-}
-
-
 //is every vertex halted?
 bool Graph::isDone() {
   bool result = true;
@@ -215,11 +207,8 @@ void Graph::start(int numthreads) {
   typedef std::chrono::high_resolution_clock clock;
   auto start = clock::now();
   numThreads = numthreads;
-  doneWithSuperstep = new bool [numThreads];
-  
-  for(int x=0;x<numThreads;x++) {
-    doneWithSuperstep[x] = false;
-  }
+
+  bar = new boost::barrier(numthreads);
   std::vector<std::thread*> threads;
     
     for (int i = 0; i < numThreads; i++) {
@@ -243,16 +232,15 @@ void Graph::threadMain(int id) {
   while(!isDone()) {
     if(id == 0)
       std::cout << "SUPERSTEP " << superstepcount << "\n";
-    doneWithSuperstep[id] = false;
     for(int x=id;x<vertices.size();x = x + numThreads) {
       vertices[x]->compute(messagequeue->listAt(x));
     }
-    doneWithSuperstep[id] = true;
-    while(!isDoneWithSuperstep()){
 
-    }
-    if(id==0) 
+
+    bar->wait();
+    if(id==0) {
       superstepcount++;
+    }
 
   }
 }
@@ -271,7 +259,6 @@ void Graph::addVertex (int weight) {
   //vertices.push_back(new GraphNode(weight));
   vertices.push_back(new GraphNode(weight,*messagequeue, this, vertices.size()));
   messagequeue->addRows(1);
- 
 
 }
 
@@ -299,9 +286,13 @@ void Graph::print () {
 //prtints the weight of the vertices
 void Graph::printRank () {
   std::list<int>::const_iterator it;
+  std::ofstream output;
+  output.open ("output.txt");
   for (int i = 0; i < vertices.size(); i++) {
-    std::cout << i << "-> " << vertices[i]->data->weight << std::endl;
+    output << i << "-> " << vertices[i]->data->weight << std::endl;
   }
+
+  output.close();
 }
 
 //size of graph

@@ -17,5 +17,5 @@ int main(int argc, char *argv[])
   else
     std::cout << "Invalid thread count\n";
   //g.print();
-  //g.printRank();
+  g.printRank();
 }
