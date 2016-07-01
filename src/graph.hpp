@@ -58,6 +58,9 @@ public:
   bool isDone();
   void threadMain(int id);
   void printUnhaltedVertices();
+  void messageThreadMain();
+  std::vector<std::thread *> messageSendThreads;
+  bool messageThreadGo;
 private:
   boost::barrier * bar;
   int superstepcount;
@@ -86,10 +89,11 @@ public:
   }
   ~GraphNode();
   void compute(boost::lockfree::queue<message*> *  messages);
-  void sendMessageToNodes(std::vector<int> nodes, double msg);
+  void sendMessageToNodes(std::vector<int>   nodes, double msg);
   std::vector<int> neighbors;
   std::vector<int> inEdges;
   std::vector<int> outEdges;
+  std::vector<message*> localqueue;
   GraphNodeData *data;
   int id;
   void voteToHalt();
@@ -109,10 +113,10 @@ void printVec (std::vector<GraphNode> ll);
 
 
 /* appends a message to the message queue for the next iteration */ 
-void GraphNode::sendMessageToNodes(std::vector<int> nodes, double msg) {
+void GraphNode::sendMessageToNodes(std::vector<int>  nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
     message *  m = new message(nodes[x], msg);
-    messagequeue->listAt(nodes[x])->push(m);
+    localqueue.push_back(m);
   }
 }
 
@@ -186,8 +190,26 @@ Graph::Graph() {
   superstepcount = 0;
   messagequeue =  new adjlist<message*>();
   messagequeue->addRows(vertices.size());
+  messageThreadGo = true;
+  
 }
 
+
+
+void Graph::messageThreadMain() {
+  while(true) {
+    while(messageThreadGo) {
+      for(int x=0;x<vertices.size();x++) {
+	for(int y=0;y<vertices[x]->localqueue.size();y++) {
+	  message * m = vertices[x]->localqueue[y];
+	  messagequeue->listAt(x)->push(m);
+	}
+	vertices[x]->localqueue.clear();
+      }
+    }
+    // bar->wait();
+  }
+}
 
 /* 
  * used for debugging problems where threads
@@ -224,6 +246,7 @@ void Graph::start(int numthreads) {
   bar = new boost::barrier(numthreads);
   std::vector<std::thread*> threads;
     
+  messageSendThreads.push_back(new std::thread(&Graph::messageThreadMain, this));
     for (int i = 0; i < numThreads; i++) {
       threads.push_back(new std::thread(&Graph::threadMain, this, i ));
       int start = floor(vertices.size()/numThreads) * i;
@@ -250,6 +273,7 @@ void Graph::threadMain(int id) {
  
     int x = 0;
   while(!isDone()) {
+    messageThreadGo = true;
     if(id == 0)
       std::cout << "SUPERSTEP " << superstepcount << "\n";
     if(id == numThreads-1) {
@@ -262,7 +286,8 @@ void Graph::threadMain(int id) {
 	vertices[x]->compute(messagequeue->listAt(x));
       }
     }
-    //do one more compute if we have an odd number of vertices
+
+    messageThreadGo = false;
     bar->wait();
     if(id==0) {
       superstepcount++;
