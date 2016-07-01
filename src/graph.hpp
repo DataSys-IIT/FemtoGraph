@@ -57,6 +57,7 @@ public:
   void start(int threads);
   bool isDone();
   void threadMain(int id);
+  void printUnhaltedVertices();
 private:
   boost::barrier * bar;
   int superstepcount;
@@ -188,6 +189,18 @@ Graph::Graph() {
 }
 
 
+/* 
+ * used for debugging problems where threads
+ * leave some vertices uncomputed. 
+ */ 
+void Graph::printUnhaltedVertices() {
+  for(int x=0;x<vertices.size();x++) {
+    if(vertices[x]->isHalted == false) {
+      std::cout << "[" << x << "] is not halted\n";
+    }
+  }
+}
+
 //is every vertex halted?
 bool Graph::isDone() {
   bool result = true;
@@ -213,6 +226,9 @@ void Graph::start(int numthreads) {
     
     for (int i = 0; i < numThreads; i++) {
       threads.push_back(new std::thread(&Graph::threadMain, this, i ));
+      int start = floor(vertices.size()/numThreads) * i;
+      std::cout << "THREAD [" << i << "] start "<< start <<" end " << start + floor(vertices.size()/numThreads)  << "\n" ;
+ 
     }
     for (int i = 0; i < numThreads; i++) {
       threads[i]->join();
@@ -229,17 +245,29 @@ void Graph::start(int numthreads) {
 
 void Graph::threadMain(int id) {
   std::cout << "started thread id: "<<id << "\n";
+  int start = floor(vertices.size()/numThreads) * id;
+  // std::cout << "THREAD [" << id << "] start "<< start <<" end " << start + floor(vertices.size()/numThreads)  << "\n" ;
+ 
+    int x = 0;
   while(!isDone()) {
     if(id == 0)
       std::cout << "SUPERSTEP " << superstepcount << "\n";
-
-    int start = floor(vertices.size()/numThreads) * id;
-    for(int x=start;x<start + floor(vertices.size()/numThreads);x = x +1) {
-      vertices[x]->compute(messagequeue->listAt(x));
+    if(id == numThreads-1) {
+      for(x=start;x<vertices.size();x = x +1) {
+	vertices[x]->compute(messagequeue->listAt(x));
+      }
     }
-
-
+    else {
+      for(x=start;x<start + floor(vertices.size()/numThreads);x = x +1) {
+	vertices[x]->compute(messagequeue->listAt(x));
+      }
+    }
+    //do one more compute if we have an odd number of vertices
     bar->wait();
+
+    if((superstepcount == 31) && (id == numThreads-1)) {
+      printUnhaltedVertices();
+    }
     if(id==0) {
       superstepcount++;
     }
