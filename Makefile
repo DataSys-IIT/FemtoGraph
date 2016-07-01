@@ -1,13 +1,13 @@
 CPP=g++
-CPPFLAGS=-lpthread -lboost_thread -pthread -std=c++11 -Wl,--no-as-needed -g 
+CPPFLAGS=-lpthread -lboost_thread  -lboost_system -DBOOST_SYSTEM_NO_DEPRECATED -std=c++11 -g
 
 all: graph hmgraph mtgraph
 
 hmgraph: src/hmgraph.hpp
-	$(CPP) $(CPPFLAGS) src/hmgraph.hpp src/hmgraph-main.cpp -o bin/hmgraph
+	$(CPP)src/hmgraph.hpp src/hmgraph-main.cpp -o bin/hmgraph  $(CPPFLAGS) 
 
 graph: src/graph.hpp
-	$(CPP) src/graph.hpp src/graph-main.cpp  -o bin/graph  $(CPPFLAGS)
+	$(CPP)  src/graph.hpp src/graph-main.cpp  -o bin/graph $(CPPFLAGS)  
 
 mtgraph:  src/mtgraph.o src/queue.o src/mtmain.o
 	$(CPP) $(CPPFLAGS) src/mtmain.cpp src/mtgraph.hpp src/queue.hpp  -o bin/mtgraph

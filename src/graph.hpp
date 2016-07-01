@@ -145,7 +145,7 @@ void GraphNode::compute(boost::lockfree::queue<message*> *  messages) {
     while (messages->pop(m)) {
       sum += m->data;
     }
-    this->data->weight = 0.15 / graph->size() + 0.85 * sum;
+    this->data->weight = 0.5 / graph->size() + 0.5 * sum;
   }
   if(graph->superstep() < 30) {
     const long n = this->outEdges.size();
@@ -264,10 +264,6 @@ void Graph::threadMain(int id) {
     }
     //do one more compute if we have an odd number of vertices
     bar->wait();
-
-    if((superstepcount == 31) && (id == numThreads-1)) {
-      printUnhaltedVertices();
-    }
     if(id==0) {
       superstepcount++;
     }
