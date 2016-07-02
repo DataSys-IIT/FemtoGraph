@@ -15,6 +15,9 @@
 #include <boost/lockfree/queue.hpp>
 #include <atomic>
 #include <boost/thread/barrier.hpp>
+#include <algorithm>
+#include <numeric>
+#include <future>
 //enables some expensive validation and error checking
 #define ECC 0
 
@@ -116,7 +119,7 @@ void printVec (std::vector<GraphNode> ll);
 void GraphNode::sendMessageToNodes(std::vector<int>  nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
     message *  m = new message(nodes[x], msg);
-    localqueue.push_back(m);
+    messagequeue->listAt(nodes[x])->push(m);
   }
 }
 
@@ -153,7 +156,7 @@ void GraphNode::compute(boost::lockfree::queue<message*> *  messages) {
   }
   if(graph->superstep() < 30) {
     const long n = this->outEdges.size();
-    sendMessageToNodes(this->neighbors, this->data->weight / n);
+    std::async(std::launch::async,&GraphNode::sendMessageToNodes,this, this->neighbors, this->data->weight / n);
   }
   else {
     voteToHalt();
