@@ -55,9 +55,9 @@ adjlist<T>::~adjlist() {
 
 template <class T>
 void adjlist<T>::push(boost::lockfree::queue<message*> * val) {
-  global_mutex.lock();
+  //global_mutex.lock();
   list.push_back(val);
-  global_mutex.unlock();
+  //global_mutex.unlock();
 }
 
 template <class T>
