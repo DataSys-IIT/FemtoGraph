@@ -15,6 +15,7 @@
 #include <boost/lockfree/queue.hpp>
 #include <atomic>
 #include <boost/thread/barrier.hpp>
+#include <future>
 //enables some expensive validation and error checking
 #define ECC 0
 
@@ -90,6 +91,7 @@ public:
   ~GraphNode();
   void compute(boost::lockfree::queue<message*> *  messages);
   void sendMessageToNodes(std::vector<int>  &  nodes, double msg);
+  void asyncTask(int x, double msg, std::vector<int> * nodes);
   std::vector<int> neighbors;
   std::vector<int> inEdges;
   std::vector<int> outEdges;
@@ -115,9 +117,16 @@ void printVec (std::vector<GraphNode> ll);
 /* appends a message to the message queue for the next iteration */ 
 void GraphNode::sendMessageToNodes(std::vector<int> &  nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
-    message *  m = new message(nodes[x], msg);
-    messagequeue->listAt(nodes[x])->push(m);
+    std::async(&GraphNode::asyncTask, this, x, msg, &nodes);
   }
+}
+
+
+void GraphNode::asyncTask(int x, double msg, std::vector<int> * nodes) {
+  int target = (*nodes)[x];
+  message *  m = new message(target, msg);
+  messagequeue->listAt(target)->push(m);
+
 }
 
 
