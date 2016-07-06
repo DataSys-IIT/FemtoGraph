@@ -136,7 +136,8 @@ void GraphNode::sendMessageToNodes(std::vector<int> &  nodes, double msg) {
   std::async(&GraphNode::asyncTask, this, 0, msg, &nodes);
 }
 
-
+/* called to send messages asynchronously. 
+ * Should speed up computation a bit*/
 void GraphNode::asyncTask(int y, double msg, std::vector<int> * nodes) {
   for(int x=0;x<nodes->size();x++) {
     int target = (*nodes)[x];
@@ -148,7 +149,7 @@ void GraphNode::asyncTask(int y, double msg, std::vector<int> * nodes) {
 
 
 
-//send a message to one vertex
+//constructor for message object
 message::message(int to, double data) {
   this->to = to;
   this->data = data;
@@ -201,6 +202,11 @@ Graph::Graph() {
 
 
 
+/* 
+ * this is an old system for 'pulling' messages 
+ * using multiple threads. It has been abandoned in 
+ * favor of the asynchronous approach 
+ */ 
 void Graph::messageThreadMain() {
   while(true) {
     while(messageThreadGo) {
@@ -239,6 +245,10 @@ bool Graph::isDone() {
   return result;
 }
 
+
+/* this is called to start the threadpool 
+ * and begin computation
+ */ 
 void Graph::start(int numthreads) {
   
   using std::chrono::duration_cast;
@@ -271,6 +281,8 @@ void Graph::start(int numthreads) {
   
 }
 
+
+/* this is a thread of execution */
 void Graph::threadMain(int id) {
   std::cout << "started thread id: "<<id << "\n";
   int start = floor(vertices.size()/numThreads) * id;
@@ -278,9 +290,11 @@ void Graph::threadMain(int id) {
  
     int x = 0;
   while(!isDone()) {
-    messageThreadGo = true;
     if(id == 0)
       std::cout << "SUPERSTEP " << superstepcount << "\n";
+
+
+    //call compute from the context of all vertices. 
     if(id == numThreads-1) {
       for(x=start;x<vertices.size();x = x +1) {
 	vertices[x]->compute(messagequeue->listAt(x));
@@ -292,12 +306,13 @@ void Graph::threadMain(int id) {
       }
     }
 
-    messageThreadGo = false;
+    //wait until all threads complete
     bar->wait();
+
+    //incriment the superstep
     if(id==0) {
       superstepcount++;
     }
-
   }
 }
 
