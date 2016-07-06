@@ -58,13 +58,14 @@ public:
   bool isDone();
   void threadMain(int id);
   void printUnhaltedVertices();
-  void messageThreadMain();
+  void messageThreadMain(int id);
   std::vector<std::thread *> messageSendThreads;
   bool messageThreadGo;
 private:
   boost::barrier * bar;
   int superstepcount;
   int numThreads;
+  int numMessageThreads;
 };
 
 
@@ -196,10 +197,11 @@ Graph::Graph() {
 
 
 
-void Graph::messageThreadMain() {
+void Graph::messageThreadMain(int id) {
+  int start = floor(vertices.size()/numMessageThreads) * id;
   while(true) {
     while(messageThreadGo) {
-      for(int x=0;x<vertices.size();x++) {
+      for(int x=start;x<start + floor(vertices.size()/numMessageThreads);x = x +1) {
 	for(int y=0;y<vertices[x]->localqueue.size();y++) {
 	  message * m = vertices[x]->localqueue[y];
 	  messagequeue->listAt(x)->push(m);
@@ -242,11 +244,14 @@ void Graph::start(int numthreads) {
   typedef std::chrono::high_resolution_clock clock;
   auto start = clock::now();
   numThreads = numthreads;
-
+  numMessageThreads = floor(numThreads / 2);
   bar = new boost::barrier(numthreads);
   std::vector<std::thread*> threads;
-    
-  messageSendThreads.push_back(new std::thread(&Graph::messageThreadMain, this));
+
+  for(int x=0;x<numMessageThreads;x++) {
+    messageSendThreads.push_back(new std::thread(&Graph::messageThreadMain, this, x));
+  }
+  
     for (int i = 0; i < numThreads; i++) {
       threads.push_back(new std::thread(&Graph::threadMain, this, i ));
       int start = floor(vertices.size()/numThreads) * i;
