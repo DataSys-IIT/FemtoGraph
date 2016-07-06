@@ -116,16 +116,16 @@ void printVec (std::vector<GraphNode> ll);
 
 /* appends a message to the message queue for the next iteration */ 
 void GraphNode::sendMessageToNodes(std::vector<int> &  nodes, double msg) {
-  for(int x=0;x<nodes.size();x++) {
-    std::async(&GraphNode::asyncTask, this, x, msg, &nodes);
-  }
+  std::async(&GraphNode::asyncTask, this, 0, msg, &nodes);
 }
 
 
-void GraphNode::asyncTask(int x, double msg, std::vector<int> * nodes) {
-  int target = (*nodes)[x];
-  message *  m = new message(target, msg);
-  messagequeue->listAt(target)->push(m);
+void GraphNode::asyncTask(int y, double msg, std::vector<int> * nodes) {
+  for(int x=0;x<nodes->size();x++) {
+    int target = (*nodes)[x];
+    message *  m = new message(target, msg);
+    messagequeue->listAt(target)->push(m);
+  }
 
 }
 
