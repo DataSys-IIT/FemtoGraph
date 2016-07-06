@@ -244,7 +244,7 @@ void Graph::start(int numthreads) {
   typedef std::chrono::high_resolution_clock clock;
   auto start = clock::now();
   numThreads = numthreads;
-  numMessageThreads = floor(numThreads);
+  numMessageThreads = floor(numThreads / 2);
   bar = new boost::barrier(numthreads);
   std::vector<std::thread*> threads;
 
