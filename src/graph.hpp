@@ -89,7 +89,7 @@ public:
   }
   ~GraphNode();
   void compute(boost::lockfree::queue<message*> *  messages);
-  void sendMessageToNodes(std::vector<int>   nodes, double msg);
+  void sendMessageToNodes(std::vector<int>  &  nodes, double msg);
   std::vector<int> neighbors;
   std::vector<int> inEdges;
   std::vector<int> outEdges;
@@ -113,7 +113,7 @@ void printVec (std::vector<GraphNode> ll);
 
 
 /* appends a message to the message queue for the next iteration */ 
-void GraphNode::sendMessageToNodes(std::vector<int>  nodes, double msg) {
+void GraphNode::sendMessageToNodes(std::vector<int> &  nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
     message *  m = new message(nodes[x], msg);
     localqueue.push_back(m);
