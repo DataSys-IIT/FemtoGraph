@@ -116,7 +116,7 @@ void printVec (std::vector<GraphNode> ll);
 void GraphNode::sendMessageToNodes(std::vector<int> &  nodes, double msg) {
   for(int x=0;x<nodes.size();x++) {
     message *  m = new message(nodes[x], msg);
-    messagequeue->listAt(nodes[x])->push(m);
+    localqueue.push_back(m);
   }
 }
 
@@ -246,7 +246,7 @@ void Graph::start(int numthreads) {
   bar = new boost::barrier(numthreads);
   std::vector<std::thread*> threads;
     
-  //messageSendThreads.push_back(new std::thread(&Graph::messageThreadMain, this));
+  messageSendThreads.push_back(new std::thread(&Graph::messageThreadMain, this));
     for (int i = 0; i < numThreads; i++) {
       threads.push_back(new std::thread(&Graph::threadMain, this, i ));
       int start = floor(vertices.size()/numThreads) * i;
