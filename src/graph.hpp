@@ -19,8 +19,6 @@
 //enables some expensive validation and error checking
 #define ECC 0
 
-//TODO Add deconstructors - NEED TO CLEANUP
-
 
 
 
@@ -46,23 +44,28 @@ class Graph {
 public:
   Graph();
   ~Graph();
-  std::vector<GraphNode*> vertices;
-  adjlist<message*> * messagequeue;
+
+
+  //use these to create a graph
   void addVertex(int weight);
   void addEdge (int from, int to);
   void print();
   void printRank();
   int size();
   int edgeCount();
-  int superstep();
   void start(int threads);
   bool isDone();
+  std::vector<GraphNode*> vertices;
+
+  //use these in compute
+  int superstep();
+private:
   void threadMain(int id);
   void printUnhaltedVertices();
   void messageThreadMain();
   std::vector<std::thread *> messageSendThreads;
   bool messageThreadGo;
-private:
+  adjlist<message*> * messagequeue;
   boost::barrier * bar;
   int superstepcount;
   int numThreads;
@@ -89,22 +92,36 @@ public:
     }
   }
   ~GraphNode();
-  void compute(boost::lockfree::queue<message*> *  messages);
-  void sendMessageToNodes(std::vector<int>  &  nodes, double msg);
-  void asyncTask(int x, double msg, std::vector<int> * nodes);
+  GraphNodeData *data;
   std::vector<int> neighbors;
   std::vector<int> inEdges;
   std::vector<int> outEdges;
+  bool isHalted;
   std::vector<message*> localqueue;
-  GraphNodeData *data;
-  int id;
+  
+  //use these in compute
+  void compute(boost::lockfree::queue<message*> *  messages);
+  void sendMessageToNodes(std::vector<int>  &  nodes, double msg);
   void voteToHalt();
   void unHalt();
-  bool isHalted;
-  Graph * graph;
 private:
   adjlist<message*> * messagequeue;
+  Graph * graph;
+  int id;
+  void asyncTask(int x, double msg, std::vector<int> * nodes);
 };
+
+
+
+/* 
+ * Pregel 'update' function. Called virtually in parallel from 
+ * the context of each vertex.
+ *  
+ */  
+void GraphNode::compute(boost::lockfree::queue<message*> *  messages) { 
+  //TODO: put code here
+}
+
 
 
 
@@ -147,27 +164,6 @@ GraphNode::~GraphNode () {
 }
 
 
-/* 
- * Pregel 'update' function. Called virtually in parallel from 
- * the context of each vertex. 
- */  
-void GraphNode::compute(boost::lockfree::queue<message*> *  messages) { 
-  if(graph->superstep() >= 1) {
-    double sum = 0;
-    message * m;
-    while (messages->pop(m)) {
-      sum += m->data;
-    }
-    this->data->weight = 0.5 / graph->size() + 0.5 * sum;
-  }
-  if(graph->superstep() < 30) {
-    const long n = this->outEdges.size();
-    sendMessageToNodes(this->neighbors, this->data->weight / n);
-  }
-  else {
-    voteToHalt();
-  }
-}
 
 
 //halts the vertex until it receives a message or all
