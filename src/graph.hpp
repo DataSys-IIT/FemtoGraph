@@ -280,17 +280,9 @@ void Graph::start(int numthreads) {
       std::vector<GraphNode*> threaddata;
       int x;
       int start_data = floor(vertices.size()/numThreads) * i;
-      if(i == numThreads-1) {
-	for(x=start_data;x<vertices.size();x = x +1) {
-	  threaddata.push_back(vertices[x]);
-	}
+      for(int x=i;x<vertices.size();x = x + numThreads) {
+	threaddata.push_back(vertices[x]);
       }
-      else {
-	for(x=start_data;x<start_data + floor(vertices.size()/numThreads);x = x +1) {
-	  threaddata.push_back(vertices[x]);
-	}
-      }
-
       
       
       threads.push_back(new std::thread(&Graph::threadMain, this, i, threaddata ));
