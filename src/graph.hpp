@@ -56,19 +56,18 @@ public:
   void start(int threads);
   bool isDone();
   std::vector<GraphNode*> vertices;
-
+  std::atomic_int superstepcount;
   //use these in compute
   int superstep();
 private:
-  void threadMain(int id);
+  void threadMain(int id,  std::vector<GraphNode*> dataset);
   void printUnhaltedVertices();
   void messageThreadMain();
   std::vector<std::thread *> messageSendThreads;
   bool messageThreadGo;
   adjlist<message*> * messagequeue;
   boost::barrier * bar;
-  int superstepcount;
-  int numThreads;
+  std::atomic_int numThreads;
 };
 
 
@@ -104,10 +103,10 @@ public:
   void sendMessageToNodes(std::vector<int>  &  nodes, double msg);
   void voteToHalt();
   void unHalt();
+  int id;
 private:
   adjlist<message*> * messagequeue;
   Graph * graph;
-  int id;
   void asyncTask(int x, double msg, std::vector<int> * nodes);
 };
 
@@ -119,7 +118,7 @@ private:
  *  
  */  
 void GraphNode::compute(boost::lockfree::queue<message*> *  messages) { 
-  if(graph->superstep() >= 1) {
+  if(graph->superstepcount >= 1) {
     double sum = 0;
     message * m;
     while (messages->pop(m)) {
@@ -127,7 +126,7 @@ void GraphNode::compute(boost::lockfree::queue<message*> *  messages) {
     }
     this->data->weight = 0.5 / graph->size() + 0.5 * sum;
   }
-  if(graph->superstep() < 11) {
+  if(graph->superstepcount < 11) {
     const long n = this->outEdges.size();
     sendMessageToNodes(this->neighbors, this->data->weight / n);
   }
@@ -277,10 +276,25 @@ void Graph::start(int numthreads) {
     
   //messageSendThreads.push_back(new std::thread(&Graph::messageThreadMain, this));
     for (int i = 0; i < numThreads; i++) {
-      threads.push_back(new std::thread(&Graph::threadMain, this, i ));
-      int start = floor(vertices.size()/numThreads) * i;
-      std::cout << "THREAD [" << i << "] start "<< start <<" end " << start + floor(vertices.size()/numThreads)  << "\n" ;
- 
+
+      std::vector<GraphNode*> threaddata;
+      int x;
+      int start_data = floor(vertices.size()/numThreads) * i;
+      if(i == numThreads-1) {
+	for(x=start_data;x<vertices.size();x = x +1) {
+	  threaddata.push_back(vertices[x]);
+	}
+      }
+      else {
+	for(x=start_data;x<start_data + floor(vertices.size()/numThreads);x = x +1) {
+	  threaddata.push_back(vertices[x]);
+	}
+      }
+
+      
+      
+      threads.push_back(new std::thread(&Graph::threadMain, this, i, threaddata ));
+      threaddata.clear();
     }
     for (int i = 0; i < numThreads; i++) {
       threads[i]->join();
@@ -297,29 +311,19 @@ void Graph::start(int numthreads) {
 
 
 /* this is a thread of execution */
-void Graph::threadMain(int id) {
-  std::cout << "started thread id: "<<id << "\n";
+void Graph::threadMain(int id, std::vector<GraphNode*> dataset) {
+  if(id==0)
+    std::cout << "started thread id: "<<id << "\n"; //thread probem
   int start = floor(vertices.size()/numThreads) * id;
   // std::cout << "THREAD [" << id << "] start "<< start <<" end " << start + floor(vertices.size()/numThreads)  << "\n" ;
  
-    int x = 0;
   while(!isDone()) {
     if(id == 0)
       std::cout << "SUPERSTEP " << superstepcount << "\n";
 
-
-    //call compute from the context of all vertices. 
-    if(id == numThreads-1) {
-      for(x=start;x<vertices.size();x = x +1) {
-	vertices[x]->compute(messagequeue->listAt(x));
-      }
+    for(int x=0;x<dataset.size();x++) {
+      dataset[x]->compute(messagequeue->listAt(dataset[x]->id));
     }
-    else {
-      for(x=start;x<start + floor(vertices.size()/numThreads);x = x +1) {
-	vertices[x]->compute(messagequeue->listAt(x));
-      }
-    }
-
     //wait until all threads complete
     bar->wait();
 
