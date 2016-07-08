@@ -125,9 +125,9 @@ void GraphNode::compute(boost::lockfree::queue<message*> *  messages) {
     while (messages->pop(m)) {
       sum += m->data;
     }
-    this->data->weight = 0.15 / graph->size() + 0.85 * sum;
+    this->data->weight = 0.5 / graph->size() + 0.5 * sum;
   }
-  if(graph->superstep() < 30) {
+  if(graph->superstep() < 11) {
     const long n = this->outEdges.size();
     sendMessageToNodes(this->neighbors, this->data->weight / n);
   }
