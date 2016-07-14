@@ -65,7 +65,7 @@ private:
   void messageThreadMain();
   std::vector<std::thread *> messageSendThreads;
   bool messageThreadGo;
-  adjlist<message*> * messagequeue;
+  boost::lockfree::queue<message*> * messagequeue;
   boost::barrier * bar;
   std::atomic_int numThreads;
 };
@@ -74,7 +74,7 @@ private:
 /* represents a vertex in the graph */ 
 class GraphNode {
 public:
-  GraphNode(int weight, adjlist<message*> &  messagequeue,  Graph * graph, int id) {
+  GraphNode(int weight, boost::lockfree::queue<message*> &  messagequeue,  Graph * graph, int id) {
     data = new GraphNodeData(weight);
     this->messagequeue = &messagequeue;
     this->id = id;
@@ -105,7 +105,7 @@ public:
   void unHalt();
   int id;
 private:
-  adjlist<message*> * messagequeue;
+  boost::lockfree::queue<message*> * messagequeue;
   Graph * graph;
   void asyncTask(int x, double msg, std::vector<int> * nodes);
 };
@@ -155,7 +155,7 @@ void GraphNode::asyncTask(int y, double msg, std::vector<int> * nodes) {
   for(int x=0;x<nodes->size();x++) {
     int target = (*nodes)[x];
     message *  m = new message(target, msg);
-    messagequeue->listAt(target)->push(m);
+    messagequeue->push(m);
   }
 
 }
@@ -207,32 +207,9 @@ Graph::~Graph () {
 //constructor for graph
 Graph::Graph() {
   superstepcount = 0;
-  messagequeue =  new adjlist<message*>();
-  messagequeue->addRows(vertices.size());
+  messagequeue =  new boost::lockfree::queue<message*>(2000);
   messageThreadGo = true;
   
-}
-
-
-
-/* 
- * this is an old system for 'pulling' messages 
- * using multiple threads. It has been abandoned in 
- * favor of the asynchronous approach 
- */ 
-void Graph::messageThreadMain() {
-  while(true) {
-    while(messageThreadGo) {
-      for(int x=0;x<vertices.size();x++) {
-	for(int y=0;y<vertices[x]->localqueue.size();y++) {
-	  message * m = vertices[x]->localqueue[y];
-	  messagequeue->listAt(x)->push(m);
-	}
-	vertices[x]->localqueue.clear();
-      }
-    }
-    // bar->wait();
-  }
 }
 
 /* 
@@ -313,8 +290,10 @@ void Graph::threadMain(int id, std::vector<GraphNode*> dataset) {
     if(id == 0)
       std::cout << "SUPERSTEP " << superstepcount << "\n";
 
-    for(int x=0;x<dataset.size();x++) {
-      dataset[x]->compute(messagequeue->listAt(dataset[x]->id));
+    while(!messagequeue->empty()) {
+      Message  * m;
+      messagequeue->pop(m);
+      dataset[m->to]->compute(m);
     }
     //wait until all threads complete
     bar->wait();
@@ -339,7 +318,6 @@ void Graph::addVertex (int weight) {
   //GraphNode *node = new GraphNode(weight);
   //vertices.push_back(new GraphNode(weight));
   vertices.push_back(new GraphNode(weight,*messagequeue, this, vertices.size()));
-  messagequeue->addRows(1);
 
 }
 
