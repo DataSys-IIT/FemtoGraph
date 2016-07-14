@@ -70,7 +70,7 @@ template <class T>
 void adjlist<T>::addRows(int num) {
   global_mutex.lock();
   for(int x=0;x<num;x++) {
-    boost::lockfree::queue<message*> * row = new boost::lockfree::queue<message*>(0);
+    boost::lockfree::queue<message*> * row = new boost::lockfree::queue<message*>(50);
     list.push_back(row);
   }
   global_mutex.unlock();
