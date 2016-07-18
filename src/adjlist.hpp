@@ -2,11 +2,12 @@
 #include <mutex>
 #include <thread>
 #include <boost/lockfree/queue.hpp>
+#include <boost/lockfree/policies.hpp>
 
 #ifndef __queue_H_INCLUDED__
 #define __queue_H_INCLUDED__
 
-/* represents a messaqge for the pregel message queue */
+
 class message {
 public:
   message(int to, double data);
@@ -24,14 +25,14 @@ public:
   void unpause();
   int size();
   void addRows(int num);
-  boost::lockfree::queue<message*> * listAt(int vertex);
+  boost::lockfree::queue<T, boost::lockfree::fixed_sized<true>> * listAt(int vertex);
   T begin();
   T end();
-  void push(boost::lockfree::queue<message*> * val);
+  void push(boost::lockfree::queue<T, boost::lockfree::fixed_sized<true>> * val);
   void pushToList(int node, T val);
   
 private:
-  std::vector<boost::lockfree::queue<message*>*>  list;
+  std::vector<boost::lockfree::queue<T, boost::lockfree::fixed_sized<true>>*>  list;
   std::mutex global_mutex;
 };
 
@@ -42,27 +43,20 @@ adjlist<T>::adjlist() {
 
 template <class T>
 adjlist<T>::~adjlist() {
-  typename std::vector<std::vector<T>*>::const_iterator row;
-  typename std::vector<T>::const_iterator col;
-  for(row = list.begin() ;row != list.end() ; ++row) {
-    for(col = (*row)->begin(); col != (*row)->end(); ++col) {
-      delete *col;
-    }
-    delete *row;;
-  }
+  
 }
 
 
 template <class T>
-void adjlist<T>::push(boost::lockfree::queue<message*> * val) {
+void adjlist<T>::push(boost::lockfree::queue<T, boost::lockfree::fixed_sized<true>> * val) {
   global_mutex.lock();
   list.push_back(val);
   global_mutex.unlock();
 }
 
 template <class T>
-boost::lockfree::queue<message*> *  adjlist<T>::listAt(int vertex) {
-  boost::lockfree::queue<message*> * vec = list.at(vertex);
+boost::lockfree::queue<T, boost::lockfree::fixed_sized<true>> *  adjlist<T>::listAt(int vertex) {
+  boost::lockfree::queue<T, boost::lockfree::fixed_sized<true>> * vec = list.at(vertex);
   return  vec;
 }
 
@@ -70,7 +64,7 @@ template <class T>
 void adjlist<T>::addRows(int num) {
   global_mutex.lock();
   for(int x=0;x<num;x++) {
-    boost::lockfree::queue<message*> * row = new boost::lockfree::queue<message*>(50);
+    boost::lockfree::queue<T, boost::lockfree::fixed_sized<true>> * row = new boost::lockfree::queue<T, boost::lockfree::fixed_sized<true>>(100);
     list.push_back(row);
   }
   global_mutex.unlock();
@@ -78,7 +72,7 @@ void adjlist<T>::addRows(int num) {
 
 template <class T>
 void adjlist<T>::pushToList(int node, T val)  {
-  boost::lockfree::queue<message*> * messagetmp = list.at(node);
+  boost::lockfree::queue<T, boost::lockfree::fixed_sized<true>> * messagetmp = list.at(node);
   (*messagetmp).push(val);
 }
 

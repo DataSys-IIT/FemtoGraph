@@ -60,7 +60,7 @@ public:
   //use these in compute
   int superstep();
 private:
-  void threadMain(int id,  std::vector<GraphNode*> dataset);
+  void threadMain(int id);
   void printUnhaltedVertices();
   void messageThreadMain();
   std::vector<std::thread *> messageSendThreads;
@@ -99,7 +99,7 @@ public:
   std::vector<message*> localqueue;
   
   //use these in compute
-  void compute(boost::lockfree::queue<message*> *  messages);
+  void compute(boost::lockfree::queue<message*, boost::lockfree::fixed_sized<true>> *  messages);
   void sendMessageToNodes(std::vector<int>  &  nodes, double msg);
   void voteToHalt();
   void unHalt();
@@ -117,7 +117,7 @@ private:
  * the context of each vertex.
  *  
  */  
-void GraphNode::compute(boost::lockfree::queue<message*> *  messages) { 
+void GraphNode::compute(boost::lockfree::queue<message*, boost::lockfree::fixed_sized<true>> *  messages) { 
   if(graph->superstepcount >= 1) {
     double sum = 0;
     message * m;
@@ -276,18 +276,12 @@ void Graph::start(int numthreads) {
     
   //messageSendThreads.push_back(new std::thread(&Graph::messageThreadMain, this));
     for (int i = 0; i < numThreads; i++) {
-
-      std::vector<GraphNode*> threaddata;
       int x;
       int start_data = floor(vertices.size()/numThreads) * i;
-      for(int x=i;x<vertices.size();x = x + numThreads) {
-	threaddata.push_back(vertices[x]);
-      }
       
-      
-      threads.push_back(new std::thread(&Graph::threadMain, this, i, threaddata ));
-      threaddata.clear();
+      threads.push_back(new std::thread(&Graph::threadMain, this, i));
     }
+    std::cout << "Done starting threads\n";
     for (int i = 0; i < numThreads; i++) {
       threads[i]->join();
     }
@@ -303,22 +297,24 @@ void Graph::start(int numthreads) {
 
 
 /* this is a thread of execution */
-void Graph::threadMain(int id, std::vector<GraphNode*> dataset) {
-  if(id==0)
-    std::cout << "started thread id: "<<id << "\n"; //thread probem
-  int start = floor(vertices.size()/numThreads) * id;
+void Graph::threadMain(int id) {
+  //std::cout << "started thread id: "<<id << "\n"; //thread probem
+    //int start = floor(vertices.size()/numThreads) * id;
   // std::cout << "THREAD [" << id << "] start "<< start <<" end " << start + floor(vertices.size()/numThreads)  << "\n" ;
  
-  while(!isDone()) {
+  while(superstepcount < 11) {
     if(id == 0)
-      std::cout << "SUPERSTEP " << superstepcount << "\n";
+      std::cout << "SUPERSTEP " << superstepcount << " thread[" << id <<"]\n";
 
-    for(int x=0;x<dataset.size();x++) {
-      dataset[x]->compute(messagequeue->listAt(dataset[x]->id));
+    for(int x=id;x<vertices.size();x = x + numThreads) {
+      vertices[x]->compute(messagequeue->listAt(x));
+      //std::cout<< "COMPUTE~\n";
     }
-    //wait until all threads complete
-    bar->wait();
 
+    //wait until all threads complete
+    if(superstepcount <10)
+      bar->wait();
+    
     //incriment the superstep
     if(id==0) {
       superstepcount++;
