@@ -1,0 +1,725 @@
+==43966== Helgrind, a thread error detector
+==43966== Copyright (C) 2007-2013, and GNU GPL'd, by OpenWorks LLP et al.
+==43966== Using Valgrind-3.10.1 and LibVEX; rerun with -h for copyright info
+==43966== Command: ./bin/graph /home/aballmer/email-EuAll.txt 48
+==43966== 
+==43966== ---Thread-Announcement------------------------------------------
+==43966== 
+==43966== Thread #1 is the program's root thread
+==43966== 
+==43966== ---Thread-Announcement------------------------------------------
+==43966== 
+==43966== Thread #2 was created
+==43966==    at 0x5D9B33E: clone (clone.S:74)
+==43966==    by 0x4E44199: do_clone.constprop.3 (createthread.c:75)
+==43966==    by 0x4E458BA: create_thread (createthread.c:245)
+==43966==    by 0x4E458BA: pthread_create@@GLIBC_2.2.5 (pthread_create.c:611)
+==43966==    by 0x4C30E0D: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x5532CAE: std::thread::_M_start_thread(std::shared_ptr<std::thread::_Impl_base>) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x40B6CE: std::thread::thread<void (Graph::*)(int), Graph* const, int&>(void (Graph::*&&)(int), Graph* const&&, int&) (thread:135)
+==43966==    by 0x406A74: Graph::start(int) (graph.hpp:280)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5515A7B: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406B6C: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406B6C: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 1 at 0x6274E9 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5516006: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406B76: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 1 by thread #2
+==43966== Locks held: none
+==43966==    at 0x551603F: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D7F: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==  Address 0x6274e9 is 233 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 1 at 0x6274E8 by thread #1
+==43966== Locks held: none
+==43966==    at 0x55160D0: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406B76: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 1 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5516033: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D7F: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==  Address 0x6274e8 is 232 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5509D46: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550A2BC: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x551606D: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406B76: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5509D8C: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550A2BC: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x551606D: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406B76: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5515A7B: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406B83: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406B83: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5509D46: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550A2BC: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x551606D: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406B93: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5509D8C: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550A2BC: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x551606D: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406B93: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5515A7B: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406BA0: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406BA0: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 1 at 0x5783978 by thread #1
+==43966== Locks held: none
+==43966==    at 0x550B27D: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_float<double>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, char, double) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550B54F: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, double) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5516AF4: std::ostream& std::ostream::_M_insert<double>(double) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406BB0: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 1 by thread #2
+==43966== Locks held: none
+==43966==    at 0x54EE292: std::ctype<char>::_M_widen_init() const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5516107: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D7F: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x5783978 is in the BSS segment of /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x550B3C0: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_float<double>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, char, double) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550B54F: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, double) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5516AF4: std::ostream& std::ostream::_M_insert<double>(double) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406BB0: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x550B412: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_float<double>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, char, double) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550B54F: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, double) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5516AF4: std::ostream& std::ostream::_M_insert<double>(double) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406BB0: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5515A7B: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406BBD: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #1
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406BBD: Graph::start(int) (graph.hpp:282)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ---Thread-Announcement------------------------------------------
+==43966== 
+==43966== Thread #3 was created
+==43966==    at 0x5D9B33E: clone (clone.S:74)
+==43966==    by 0x4E44199: do_clone.constprop.3 (createthread.c:75)
+==43966==    by 0x4E458BA: create_thread (createthread.c:245)
+==43966==    by 0x4E458BA: pthread_create@@GLIBC_2.2.5 (pthread_create.c:611)
+==43966==    by 0x4C30E0D: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x5532CAE: std::thread::_M_start_thread(std::shared_ptr<std::thread::_Impl_base>) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x40B6CE: std::thread::thread<void (Graph::*)(int), Graph* const, int&>(void (Graph::*&&)(int), Graph* const&&, int&) (thread:135)
+==43966==    by 0x406A74: Graph::start(int) (graph.hpp:280)
+==43966==    by 0x407977: main (graph-main.cpp:11)
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #3
+==43966== Locks held: none
+==43966==    at 0x5515A7B: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #3
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 1 at 0x6274E9 by thread #3
+==43966== Locks held: none
+==43966==    at 0x5516006: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D7F: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966== 
+==43966== This conflicts with a previous write of size 1 by thread #2
+==43966== Locks held: none
+==43966==    at 0x551603F: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D7F: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==  Address 0x6274e9 is 233 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 1 at 0x6274E8 by thread #3
+==43966== Locks held: none
+==43966==    at 0x55160D0: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D7F: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966== 
+==43966== This conflicts with a previous write of size 1 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5516033: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D7F: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==  Address 0x6274e8 is 232 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #3
+==43966== Locks held: none
+==43966==    at 0x5509D46: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550A2BC: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x551606D: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D7F: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #3
+==43966== Locks held: none
+==43966==    at 0x5509D8C: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550A2BC: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x551606D: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D7F: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #3
+==43966== Locks held: none
+==43966==    at 0x5515A7B: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D8C: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #3
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D8C: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966== 
+==43966== This conflicts with a previous write of size 8 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406D72: Graph::threadMain(int) (graph.hpp:301)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515A7B: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406E08: Graph::threadMain(int) (graph.hpp:308)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406E08: Graph::threadMain(int) (graph.hpp:308)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5509D46: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550A2BC: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x551606D: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406E12: Graph::threadMain(int) (graph.hpp:308)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5509D8C: std::ostreambuf_iterator<char, std::char_traits<char> > std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::_M_insert_int<long>(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x550A2BC: std::num_put<char, std::ostreambuf_iterator<char, std::char_traits<char> > >::do_put(std::ostreambuf_iterator<char, std::char_traits<char> >, std::ios_base&, char, long) const (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x551606D: std::ostream& std::ostream::_M_insert<long>(long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406E12: Graph::threadMain(int) (graph.hpp:308)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during read of size 8 at 0x627418 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515A7B: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406E1F: Graph::threadMain(int) (graph.hpp:308)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
+==43966== ----------------------------------------------------------------
+==43966== 
+==43966== Possible data race during write of size 8 at 0x627418 by thread #2
+==43966== Locks held: none
+==43966==    at 0x5515ABF: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x5515EC6: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x406E1F: Graph::threadMain(int) (graph.hpp:308)
+==43966==    by 0x417913: void std::_Mem_fn<void (Graph::*)(int)>::operator()<int, void>(Graph*, int&&) const (in /home/aballmer/GraphZScratch/bin/graph)
+==43966==    by 0x417790: void std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (functional:1732)
+==43966==    by 0x41723C: std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)>::operator()() (functional:1720)
+==43966==    by 0x416D69: std::thread::_Impl<std::_Bind_simple<std::_Mem_fn<void (Graph::*)(int)> (Graph*, int)> >::_M_run() (thread:115)
+==43966==    by 0x5532A5F: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.19)
+==43966==    by 0x4C30FA6: ??? (in /usr/lib/valgrind/vgpreload_helgrind-amd64-linux.so)
+==43966==    by 0x4E45183: start_thread (pthread_create.c:312)
+==43966==    by 0x5D9B37C: clone (clone.S:111)
+==43966==  Address 0x627418 is 24 bytes inside data symbol "_ZSt4cout@@GLIBCXX_3.4"
+==43966== 
