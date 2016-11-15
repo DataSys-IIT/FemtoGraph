@@ -7,9 +7,6 @@ all: graph
 graph: src/graph.hpp
 	$(CPP)  src/graph.hpp src/graph-main.cpp  -o bin/graph $(CPPFLAGS)  
 
-queue-test: src/tqueue.cpp
-	$(CPP) $(CPPFLAGS) src/tqueue.hpp -o bin/tqueue-test
-
 test: graph
 	bin/graph
 
